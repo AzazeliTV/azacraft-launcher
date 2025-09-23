@@ -4,14 +4,14 @@
 title = "AzaCraft Launcher"
 
 [ejs.landing]
-mediaGitHubURL = "https://launcher.azacraft.de/launcher/"
+mediaGitHubURL = "#"
 mediaXURL = "#"
 mediaInstagramURL = "#"
 mediaYouTubeURL = "#"
 mediaDiscordURL = "#"
 
 [ejs.settings]
-sourceGithubLink = "https://launcher.azacraft.de/launcher/"
+sourceGithubLink = "#"
 supportLink = "#"
 
 [ejs.welcome]
