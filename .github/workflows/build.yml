@@ -1,30 +1,38 @@
-name: Build Windows Launcher
+# Dateiname: .github/workflows/build.yml
 
+name: Create Windows Release
+
+# Dieser Workflow startet NUR, wenn ein Tag wie "v1.0.2" gepusht wird
 on:
   push:
-    branches: [ "main" ]
-  workflow_dispatch:
+    tags:
+      - "v*"
 
 jobs:
-  build:
+  build-and-release:
+    # Der Job läuft nur auf einer Windows-Maschine
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+    # Gibt dem Job die Erlaubnis, einen Release zu erstellen
+    permissions:
+      contents: write
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten (Version 20)
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Abhängigkeiten installieren
+        # npm install ist robuster, falls die package-lock.json nicht perfekt synchron ist
+        run: npm install
 
-      - name: Build Windows exe
-        run: yarn run dist --win nsis
-
-      - name: Upload Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*.exe
+      - name: Launcher bauen und veröffentlichen
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Dieser Token wird von electron-builder genutzt, um den Release auf GitHub zu erstellen/bearbeiten
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Dieser Befehl baut die Windows-Version und lädt sie automatisch hoch
+        run: npm run dist -- --win
