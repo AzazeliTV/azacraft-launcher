@@ -1,6 +1,6 @@
-appId: 'de.azacraft.launcher'
-productName: 'AzaCraft Launcher'
-artifactName: 'AzaCraft-Launcher-Setup-${version}.${ext}'
+appId: 'Azacraftlauncher'
+productName: 'AzaCraft-Launcher'
+artifactName: '${productName}-setup-${version}.${ext}'
 
 copyright: 'Copyright © 2025 AzaCraft'
 
@@ -12,10 +12,11 @@ files:
 
 extraResources:
   - 'libraries'
+  - 'lang'
 
 # Windows Configuration
-win:
-  target:
+win: 
+  target: 
     - target: 'nsis'
       arch: 'x64'
 
@@ -33,17 +34,18 @@ mac:
       arch:
         - 'x64'
         - 'arm64'
-  artifactName: 'Azacraft-Launcher-Setup-${version}-${arch}.${ext}'
+  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
   category: 'public.app-category.games'
 
 # Linux Configuration
-linux:
+linux: 
   target: 'AppImage'
-  maintainer: 'Azacraft'
-  vendor: 'Azacraft'
-  synopsis: 'Azacraft Launcher (Fabric 1.21.1)'
-  description: 'Custom Azacraft launcher: lädt Mods, Ressourcen & Configs automatisch und verbindet auf play.azacraft.de:25576.'
+  maintainer: 'AzazeliTV'
+  vendor: 'AzazeliTV'
+  synopsis: 'AzaCraft Minecraft Launcher'
+  description: 'AzaCraft Project'
   category: 'Game'
+
 
 directories:
   buildResources: 'build'
