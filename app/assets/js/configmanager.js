@@ -517,8 +517,8 @@ function defaultJavaConfig(effectiveJavaOptions, ram) {
 
 function defaultJavaConfig8(ram) {
     return {
-        minRAM: resolveSelectedRAM(ram),
-        maxRAM: resolveSelectedRAM(ram),
+        minRAM: "2G",
+        maxRAM: "8G",
         executable: null,
         jvmOptions: [
             '-XX:+UseConcMarkSweepGC',
@@ -531,8 +531,8 @@ function defaultJavaConfig8(ram) {
 
 function defaultJavaConfig17(ram) {
     return {
-        minRAM: resolveSelectedRAM(ram),
-        maxRAM: resolveSelectedRAM(ram),
+        minRAM: "2G",
+        maxRAM: "8G",
         executable: null,
         jvmOptions: [
             '-XX:+UnlockExperimentalVMOptions',

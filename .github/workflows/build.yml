@@ -1,38 +1,30 @@
-name: Build
+name: Build Windows Launcher
 
-on: push
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-
-    permissions:
-      contents: write
-
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
+  build:
+    runs-on: windows-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Windows exe
+        run: yarn run dist --win nsis
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
         with:
-          python-version: 3.x
-
-      - name: Install Dependencies
-        run: npm ci
-        shell: bash
-
-      - name: Build
+          files: dist/*.exe
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run dist
-        shell: bash
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

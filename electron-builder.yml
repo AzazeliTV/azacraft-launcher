@@ -1,8 +1,8 @@
-appId: 'helioslauncher'
-productName: 'Helios Launcher'
-artifactName: '${productName}-setup-${version}.${ext}'
+appId: 'de.azacraft.launcher'
+productName: 'AzaCraft Launcher'
+artifactName: 'AzaCraft-Launcher-Setup-${version}.${ext}'
 
-copyright: 'Copyright © 2018-2024 Daniel Scalzi'
+copyright: 'Copyright © 2025 AzaCraft'
 
 asar: true
 compression: 'maximum'
@@ -14,8 +14,8 @@ extraResources:
   - 'libraries'
 
 # Windows Configuration
-win: 
-  target: 
+win:
+  target:
     - target: 'nsis'
       arch: 'x64'
 
@@ -33,18 +33,17 @@ mac:
       arch:
         - 'x64'
         - 'arm64'
-  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
+  artifactName: 'Azacraft-Launcher-Setup-${version}-${arch}.${ext}'
   category: 'public.app-category.games'
 
 # Linux Configuration
-linux: 
+linux:
   target: 'AppImage'
-  maintainer: 'Daniel Scalzi'
-  vendor: 'Daniel Scalzi'
-  synopsis: 'Modded Minecraft Launcher'
-  description: 'Custom launcher which allows users to join modded servers. All mods, configurations, and updates are handled automatically.'
+  maintainer: 'Azacraft'
+  vendor: 'Azacraft'
+  synopsis: 'Azacraft Launcher (Fabric 1.21.1)'
+  description: 'Custom Azacraft launcher: lädt Mods, Ressourcen & Configs automatisch und verbindet auf play.azacraft.de:25576.'
   category: 'Game'
-
 
 directories:
   buildResources: 'build'
