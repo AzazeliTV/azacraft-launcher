@@ -1,6 +1,6 @@
 {
   "name": "azacraft-launcher",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "productName": "AzaCraft Launcher",
   "description": "AzaCraft Launcher for Minecraft Fabric 1.21.1",
   "author": "AzaCraft",
@@ -46,6 +46,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/azacraft/Azacraft-Launcher.git"
+    "url": "git+https://github.com/azazelitv/azacraft-launcher.git"
   }
 }
