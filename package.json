@@ -2,12 +2,12 @@
   "name": "azacraft-launcher",
   "version": "1.0.6",
   "productName": "AzaCraft Launcher",
-  "description": "AzaCraft Launcher for Minecraft Fabric 1.21.1",
-  "author": "AzaCraft",
+  "description": "AzaCraft Launcher for Minecraft Server",
+  "author": "AzazeliTV",
   "license": "UNLICENSED",
-  "homepage": "https://launcher.azacraft.de",
+  "homepage": "#",
   "bugs": {
-    "url": "https://launcher.azacraft.de"
+    "url": "#"
   },
   "private": true,
   "main": "index.js",
