@@ -1,5 +1,5 @@
 appId: 'Azacraftlauncher'
-productName: 'AzaCraft-Launcher'
+productName: 'AzaCraft Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
 copyright: 'Copyright © 2025 AzaCraft'
