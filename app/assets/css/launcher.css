@@ -2383,78 +2383,81 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
     position: relative;
     transition: background 2s ease;
-    overflow: hidden; /* Changed from overflow-y to overflow */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
 /* Upper content container. */
 #landingContainer > #upper {
-    flex: 1; /* Allow upper part to take available space */
+    flex: 1;
     display: flex;
     position: relative;
     transition: top 2s ease;
     top: 0px;
 }
 #landingContainer > #upper > #left {
-    display: flex; /* Changed from inline-flex */
-    width: 20%; /* Adjusted width */
+    display: flex;
+    width: 20%;
     height: 100%;
-    justify-content: center; /* Centered content */
-    align-items: flex-start; /* Aligned to the top */
+    justify-content: center;
+    align-items: flex-start;
     padding-top: 50px;
 }
 #landingContainer > #upper > #content {
     display: inline-flex;
-    width: 60%; /* Adjusted width */
+    width: 60%;
     height: 100%;
 }
 #landingContainer > #upper > #right {
-    display: flex; /* Changed from inline-flex */
-    width: 20%; /* Adjusted width */
+    display: flex;
+    width: 20%;
     height: 100%;
-    justify-content: center; /* Centered content */
+    justify-content: center;
 }
 
 /* Lower content container. */
 #landingContainer > #lower {
-    height: 100px; /* Fixed height for the bottom bar */
-    flex-shrink: 0; /* Prevent shrinking */
+    height: 100px;
+    flex-shrink: 0;
     display: flex;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    align-items: center; /* Vertically center content */
-    padding: 0 50px; /* Add horizontal padding */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+    align-items: center;
+    padding: 0 50px;
 }
 #landingContainer > #lower > #left {
-    width: 33.33%;
+    flex: 1; /* Takes up 1 part of the space */
     display: flex;
-    justify-content: flex-start; /* Align to the left */
+    justify-content: flex-start;
     align-items: center;
 }
 #landingContainer > #lower > #left #content {
-    position: static; /* Removed absolute positioning */
+    position: static;
     display: flex;
     align-items: center;
 }
 #landingContainer > #lower > #center {
-    width: 33.33%;
+    flex-shrink: 0; /* Prevents this from shrinking */
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
 }
 #landingContainer > #lower > #center #content {
-    position: static; /* Removed absolute positioning */
+    position: static;
 }
 #landingContainer > #lower > #right {
-    width: 33.33%;
+    flex: 1; /* Takes up 1 part of the space */
     display: flex;
-    justify-content: flex-end; /* Align to the right */
+    justify-content: flex-end;
     align-items: center;
 }
 #landingContainer > #lower > #right #launch_content {
-    position: static; /* Removed absolute positioning */
-    display: flex; /* Changed from inline-flex */
+    position: static;
+    display: flex;
     align-items: center;
+    justify-content: flex-start; /* Align content to the left of this container */
+    flex-grow: 1; /* Allow it to grow */
 }
 
 
@@ -3323,7 +3326,7 @@ input:checked + .toggleSwitchSlider:before {
     letter-spacing: 2px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     font-size: 20px;
-    padding: 0px 15px 0px 0px;
+    padding: 0px; /* Removed padding */
     transition: 0.25s ease;
     outline: none;
 }
