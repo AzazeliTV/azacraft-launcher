@@ -2435,14 +2435,12 @@ input:checked + .toggleSwitchSlider:before {
     position: static;
     display: flex;
     align-items: center;
-    gap: 15px; /* Reduced gap for spacing */
 }
 #landingContainer > #lower > #center {
-    flex-shrink: 0;
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 20px;
 }
 #landingContainer > #lower > #center #content {
     position: static;
@@ -2988,15 +2986,10 @@ input:checked + .toggleSwitchSlider:before {
 /* Hide unwanted icons */
 #xURL,
 #instagramURL,
-#youtubeURL {
+#youtubeURL,
+#discordURL {
     display: none !important;
 }
-
-/* Reposition Discord Icon */
-#discordURL {
-    order: -1;
-}
-
 
 /* Container object which wraps an icon to ensure fluid transitions. */
 .mediaContainer {
@@ -3092,15 +3085,6 @@ input:checked + .toggleSwitchSlider:before {
     transition-delay:0s;
 }
 
-/* Discord icon colors. */
-#discordSVG:hover,
-#discordURL:focus #discordSVG {
-    fill: #7288d9;
-}
-#discordSVG:active {
-    fill: #657ac4;
-}
-
 /*******************************************************************************
  * *
  * Landing View (Bottom Styles)                                                *
@@ -3121,7 +3105,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 25px;
     width: 2px;
     background: rgba(107, 105, 105, 0.7);
-    margin: 0 20px;
+    margin: 0 15px; /* Symmetrical margin */
     flex-shrink: 0;
 }
 
@@ -3149,7 +3133,7 @@ input:checked + .toggleSwitchSlider:before {
 #mojang_status_icon {
     font-size: 30px;
     color: #ffffff;
-    margin-left: 0; /* Removed margin */
+    margin-left: 5px; /* Added small margin */
     font-family: 'sans-serif';
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
