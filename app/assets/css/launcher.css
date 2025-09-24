@@ -32,6 +32,7 @@
 body, html, div {
     margin: 0px;
     padding: 0px;
+    box-sizing: border-box; /* Added for better layout control */
 }
 
 /* Reset p presets. */
@@ -46,10 +47,11 @@ body, button {
     color: white;
 }
 
-/*body {
-    background: url('./../images/backgrounds/0.jpg') no-repeat center center fixed;
-    background-size: cover;
-}*/
+html, body {
+    overflow: hidden; /* Prevents scrollbars on the main body */
+    height: 100%;
+}
+
 
 /*******************************************************************************
  * *
@@ -64,7 +66,6 @@ body, button {
     display: flex;
     flex-direction: column;
     transition: background-color 1s ease;
-    /*background-color: rgba(0, 0, 0, 0.5);*/
     -webkit-user-select: none;
 }
 
@@ -234,43 +235,6 @@ body, button {
     top: -10%;
     position: relative;
 }
-
-/*
-.cloudDiv {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.cloudTop {
-    height: 50%;
-    width: 100%;
-    background-image: url('../images/cloudTrans.png');
-    animation: clouds1 80s linear infinite;
-    background-size: cover;
-}
-
-.cloudBottom {
-    height: 50%;
-    width: 100%;
-    background-image: url('../images/cloudTrans2.png');
-    animation: clouds2 70s linear infinite;
-    background-size: cover;
-}
-
-@keyframes clouds1 {
-    to {
-        background-position: 200%;
-    }
-}
-@keyframes clouds2 {
-    to {
-        background-position: 230%;
-    }
-}
-*/
 
 #welcomeImageSeal {
     border-radius: 50%;
@@ -747,30 +711,6 @@ body, button {
     }
 }
 
-
-
-/*.spinningCircle {
-    margin-left: 20px;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0);
-    border-top-color: #ffffff;
-    border-right-color: #ffffff;
-    border-left-color: rgba(255, 255, 255, 0.50);
-    border-bottom-color: rgba(255, 255, 255, 0.50);
-    animation: single2 4s infinite linear;
-}
-
-@keyframes single2 {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(720deg);
-    }
-}*/
-
 /* Disclaimer container. */
 #loginDisclaimer {
     display: flex;
@@ -860,19 +800,6 @@ body, button {
     transform: rotate(45deg);
 }
 
-/*
-#login_filter {
-    height: calc(100% - 22px);
-    width: 100%;
-    z-index: 9000;
-    position: absolute;
-    filter: blur(8px) contrast(0.9) brightness(1.0);
-    background: url('./../images/backgrounds/0.jpg') no-repeat center center fixed;
-    transform: scale(1.2);
-    background-size: cover;
-}
-*/
-
 /*******************************************************************************
  * *
  * Waiting View (waiting.ejs)                                                  *
@@ -915,7 +842,6 @@ body, button {
     display: block;
     position: fixed;
     top: calc(50% - 5em);
-    /* left: 50%; */
     margin-top: -5em;
     margin-left: -5em;
     width: 10em;
@@ -926,7 +852,7 @@ body, button {
     perspective-origin: 50% 50%;
     perspective: 340px;
     background-size: 10em 10em;
-    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjI2NnB4IiBoZWlnaHQ9IjI5N3B4IiB2aWV3Qm94PSIwIDAgMjY2IDI5NyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpza2V0Y2g9Imh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaC9ucyI+CiAgICA8dGl0bGU+c3Bpbm5lcjwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNMTcxLjUwNzgxMywzLjI1MDAwMDM4IEMyMjYuMjA4MTgzLDEyLjg1NzcxMTEgMjk3LjExMjcyMiw3MS40OTEyODIzIDI1MC44OTU1OTksMTA4LjQxMDE1NSBDMjE2LjU4MjAyNCwxMzUuODIwMzEgMTg2LjUyODQwNSw5Ny4wNjI0OTY0IDE1Ni44MDA3NzQsODUuNzczNDM0NiBDMTI3LjA3MzE0Myw3NC40ODQzNzIxIDc2Ljg4ODQ2MzIsODQuMjE2MTQ2MiA2MC4xMjg5MDY1LDEwOC40MTAxNTMgQy0xNS45ODA0Njg1LDIxOC4yODEyNDcgMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IDE0NS4yNzczNDQsMjk2LjY2Nzk2OCBDMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IC0yNS40NDkyMTg3LDI1Ny4yNDIxOTggMy4zOTg0Mzc1LDEwOC40MTAxNTUgQzE2LjMwNzA2NjEsNDEuODExNDE3NCA4NC43Mjc1ODI5LC0xMS45OTIyOTg1IDE3MS41MDc4MTMsMy4yNTAwMDAzOCBaIiBpZD0iUGF0aC0xIiBmaWxsPSIjZmZmZmZmIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==);
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjI2NnB4IiBoZWlnaHQ9IjI5N3B4IiB2aWV3Qm94PSIwIDAgMjY2IDI5NyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpza2V0Y2g9Imh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuYm9tL3NrZXRjaC9ucyI+CiAgICA8dGl0bGU+c3Bpbm5lcjwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNMTcxLjUwNzgxMywzLjI1MDAwMDM4IEMyMjYuMjA4MTgzLDEyLjg1NzcxMTEgMjk3LjExMjcyMiw3MS40OTEyODIzIDI1MC44OTU1OTksMTA4LjQxMDE1NSBDMjE2LjU4MjAyNCwxMzUuODIwMzEgMTg2LjUyODQwNSw5Ny4wNjI0OTY0IDE1Ni44MDA3NzQsODUuNzczNDM0NiBDMTI3LjA3MzE0Myw3NC40ODQzNzIxIDc2Ljg4ODQ2MzIsODQuMjE2MTQ2MiA2MC4xMjg5MDY1LDEwOC40MTAxNTMgQy0xNS45ODA0Njg1LDIxOC4yODEyNDcgMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IDE0NS4yNzczNDQsMjk2LjY2Nzk2OCBDMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IC0yNS40NDkyMTg3LDI1Ny4yNDIxOTggMy4zOTg0Mzc1LDEwOC40MTAxNTUgQzE2LjMwNzA2NjEsNDEuODExNDE3NCA4NC43Mjc1ODI5LC0xMS45OTIyOTg1IDE3MS41MDc4MTMsMy4yNTAwMDAzOCBaIiBpZD0iUGF0aC0xIiBmaWxsPSIjZmZmZmZmIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==);
 }
 
 #waitingTextContainer {
@@ -1044,7 +970,7 @@ body, button {
 
 /*******************************************************************************
  * *
- * Settings View (sttings.ejs)                                                 *
+ * Settings View (settings.ejs)                                                *
  * *
  ******************************************************************************/
 
@@ -1076,6 +1002,7 @@ body, button {
     padding-top: 4%;
     height: 100%;
     width: 25%;
+    flex-shrink: 0; /* Prevent shrinking */
     box-sizing: border-box;
 }
 
@@ -1093,7 +1020,7 @@ body, button {
     justify-content: center;
 }
 #settingsNavHeaderText {
-    font-size: 20px;
+    font-size: 22px; /* Increased font size */
 }
 
 /* Navigation items outer container. */
@@ -1119,6 +1046,7 @@ body, button {
     text-align: left;
     margin: 5px 0px;
     padding: 0px 20px;
+    font-size: 16px; /* Increased font size */
     color: grey;
     cursor: pointer;
     outline: none;
@@ -1143,7 +1071,8 @@ body, button {
 /* Content container for the done button. */
 #settingsNavContentBottom {
     position: absolute;
-    top: 65%;
+    bottom: 5%; /* Adjusted position */
+    top: auto;
 }
 
 /* Settings navigational divider. */
@@ -1163,6 +1092,7 @@ body, button {
     margin: 5px 0px;
     padding: 0px 20px;
     color: white;
+    font-size: 16px; /* Increased font size */
     cursor: pointer;
     outline: none;
     transition: 0.25s ease;
@@ -1192,6 +1122,7 @@ body, button {
     width: 100%;
     height: 100%;
     overflow-y: auto;
+    padding: 0 20px; /* Added padding */
 }
 .settingsTab::-webkit-scrollbar {
     width: 2px;
@@ -1221,11 +1152,11 @@ body, button {
     margin-bottom: 20px;
 }
 .settingsTabHeaderText {
-    font-size: 20px;
+    font-size: 22px; /* Increased font size */
     font-family: 'Avenir Medium';
 }
 .settingsTabHeaderDesc {
-    font-size: 12px;
+    font-size: 14px; /* Increased font size */
 }
 
 /* Selected server content container */
@@ -1321,12 +1252,12 @@ body, button {
     flex-direction: column;
 }
 .settingsFieldTitle {
-    font-size: 14px;
+    font-size: 16px; /* Increased font size */
     font-family: 'Avenir Medium';
     color: rgba(255, 255, 255, 0.95);
 }
 .settingsFieldDesc {
-    font-size: 12px;
+    font-size: 14px; /* Increased font size */
     color: rgba(255, 255, 255, .95);
     margin-top: 5px;
 }
@@ -1374,7 +1305,6 @@ body, button {
 }
 input:checked + .toggleSwitchSlider {
     background-color: rgb(31, 140, 11);
-    /* box-shadow: inset 2px 1px 20px black; */
     border: 1px solid rgb(31, 140, 11);
 }
 input:checked + .toggleSwitchSlider:before {
@@ -1479,7 +1409,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Description for the file selector. */
 .settingsFileSelDesc {
-    font-size: 10px;
+    font-size: 12px; /* Increased font size */
     margin: 20px 0px;
     color: lightgrey;
     width: 89%;
@@ -1506,6 +1436,7 @@ input:checked + .toggleSwitchSlider:before {
     padding: 10px 0px;
     border-bottom: 1px solid #ffffff85;
     margin-bottom: 30px;
+    font-size: 16px; /* Increased font size */
 }
 
 .settingsAuthAccountTypeHeaderLeft {
@@ -1523,6 +1454,7 @@ input:checked + .toggleSwitchSlider:before {
     cursor: pointer;
     outline: none;
     transition: 0.25s ease;
+    font-size: 16px; /* Increased font size */
 }
 .settingsAddAuthAccount:hover,
 .settingsAddAuthAccount:focus {
@@ -1590,13 +1522,13 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
 }
 .settingsAuthAccountDetailTitle {
-    font-size: 12px;
+    font-size: 14px; /* Increased font size */
     color: grey;
     font-weight: bold;
     font-family: 'Avenir Medium';
 }
 .settingsAuthAccountDetailValue {
-    font-size: 14px;
+    font-size: 16px; /* Increased font size */
     -webkit-user-select: initial;
 }
 
@@ -1618,6 +1550,7 @@ input:checked + .toggleSwitchSlider:before {
     font-family: 'Avenir Medium';
     outline: none;
     transition: 0.25s ease;
+    font-size: 14px; /* Increased font size */
 }
 .settingsAuthAccountSelect:hover:not([selected]),
 .settingsAuthAccountSelect:focus:not([selected]) {
@@ -2450,79 +2383,80 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
     position: relative;
     transition: background 2s ease;
-    overflow-y: hidden;
+    overflow: hidden; /* Changed from overflow-y to overflow */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Upper content container. */
 #landingContainer > #upper {
+    flex: 1; /* Allow upper part to take available space */
+    display: flex;
     position: relative;
     transition: top 2s ease;
     top: 0px;
-    height: 77%;
-    display: flex;
 }
 #landingContainer > #upper > #left {
-    display: inline-flex;
-    width: 15%;
+    display: flex; /* Changed from inline-flex */
+    width: 20%; /* Adjusted width */
     height: 100%;
-    justify-content: flex-end;
+    justify-content: center; /* Centered content */
+    align-items: flex-start; /* Aligned to the top */
+    padding-top: 50px;
 }
 #landingContainer > #upper > #content {
     display: inline-flex;
-    width: 70%;
+    width: 60%; /* Adjusted width */
     height: 100%;
 }
 #landingContainer > #upper > #right {
-    display: inline-flex;
-    width: 15%;
+    display: flex; /* Changed from inline-flex */
+    width: 20%; /* Adjusted width */
     height: 100%;
+    justify-content: center; /* Centered content */
 }
 
 /* Lower content container. */
 #landingContainer > #lower {
-    height: 23%;
+    height: 100px; /* Fixed height for the bottom bar */
+    flex-shrink: 0; /* Prevent shrinking */
     display: flex;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    align-items: center; /* Vertically center content */
+    padding: 0 50px; /* Add horizontal padding */
 }
 #landingContainer > #lower > #left {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 100%;
-    width: 33%;
-    display: inline-flex;
-    justify-content: center;
+    width: 33.33%;
+    display: flex;
+    justify-content: flex-start; /* Align to the left */
+    align-items: center;
 }
 #landingContainer > #lower > #left #content {
-    position: relative;
-    top: 25px;
-    display: inline-flex;
-    line-height: 24px;
-    left: 50px;
+    position: static; /* Removed absolute positioning */
+    display: flex;
+    align-items: center;
 }
 #landingContainer > #lower > #center {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 100%;
-    width: 34%;
-    display: inline-flex;
+    width: 33.33%;
+    display: flex;
     justify-content: center;
+    align-items: center;
 }
 #landingContainer > #lower > #center #content {
-    position: relative;
-    z-index: 500;
-    transition: top 2s ease;
-    top: 10px;
+    position: static; /* Removed absolute positioning */
 }
 #landingContainer > #lower > #right {
-    position: relative;
-    transition: top 2s ease;
-    top: 0px;
-    height: 100%;
-    width: 33%;
-    display: inline-flex;
+    width: 33.33%;
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center;
 }
+#landingContainer > #lower > #right #launch_content {
+    position: static; /* Removed absolute positioning */
+    display: flex; /* Changed from inline-flex */
+    align-items: center;
+}
+
 
 /*******************************************************************************
  * *
@@ -2869,7 +2803,6 @@ input:checked + .toggleSwitchSlider:before {
     height: 70px;
     width: 70px;
     border-radius: 50%;
-    margin-top: 50px;
 }
 
 /* Logo container styles w/ update. */
@@ -2955,7 +2888,7 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
     position: relative;
     top: 50px;
-    align-items: flex-start;
+    align-items: center; /* Center items horizontally */
     height: calc(100% - 50px);
 }
 
@@ -2982,6 +2915,7 @@ input:checked + .toggleSwitchSlider:before {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Avatar edit overlay. */
@@ -3018,10 +2952,10 @@ input:checked + .toggleSwitchSlider:before {
     font-weight: 900;
     letter-spacing: 1px;
     text-shadow: 0px 0px 20px black;
-    position: absolute;
-    right: 95px;
     text-align: right;
     -webkit-user-select: initial;
+    position: absolute;
+    right: 95px;
 }
 
 /* Social media icon content container. */
@@ -3030,9 +2964,10 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     flex-direction: column;
     margin-top: 25px;
-    height: calc(100% - 95px);
+    height: auto; /* Adjusted height */
     width: 70px;
     align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Social Media Icon division containers. */
@@ -3148,7 +3083,6 @@ input:checked + .toggleSwitchSlider:before {
 #instagramSVG:hover,
 #instagramURL:focus #instagramSVG {
     fill: url('#instaFill')
-    /*fill: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); */
 }
 #instagramSVG:active {
     fill: url('#instaFill')
@@ -3180,10 +3114,11 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Style for a general label on the bottom of the landing view. */
 .bot_label {
-    font-size: 11px; /* Increased font size for better readability */
+    font-size: 11px;
     letter-spacing: 1px;
     font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Added text shadow for better readability */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 /* Divider used on the bottom of the landing view. */
@@ -3191,26 +3126,19 @@ input:checked + .toggleSwitchSlider:before {
     height: 25px;
     width: 2px;
     background: rgba(107, 105, 105, 0.7);
-    margin-left: 20px;
-    margin-right: 20px;
+    margin: 0 20px;
+    flex-shrink: 0;
 }
 
 /* * *
 * Landing View (Bottom Styles) | Left Content
 * * */
 
-/* Maintains maximum width on the status bar. */
-#server_status_wrapper {
-    display: inline-flex;
-    width: 75px;
-}
-
-/* Span which displays the player count of the selected server. */
 #player_count {
-    color: #ffffff; /* Changed to white for better visibility */
-    font-size: 10px; /* Increased font size */
+    color: #ffffff;
+    font-size: 10px;
     font-weight: 900;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Added text shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     margin-left: 10px;
 }
 
@@ -3224,10 +3152,10 @@ input:checked + .toggleSwitchSlider:before {
 /* Icon which displays the status of the mojang services. */
 #mojang_status_icon {
     font-size: 30px;
-    color: #ffffff; /* Changed to white for better visibility */
+    color: #ffffff;
     margin-left: 15px;
     font-family: 'sans-serif';
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Added text shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 /* Tooltip which displays more details about the mojang statuses. */
@@ -3375,7 +3303,7 @@ input:checked + .toggleSwitchSlider:before {
     color: white;
     font-weight: 900;
     letter-spacing: 2px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Added text shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     font-size: 11px;
     line-height: 30px;
     display: flex;
@@ -3386,18 +3314,6 @@ input:checked + .toggleSwitchSlider:before {
 * Landing View (Bottom Styles) | Right Content
 * * */
 
-/* Main launch content container. */
-#landingContainer > #lower > #right #launch_content {
-    position: relative;
-    top: 25px;
-    display: flex;
-    align-items: center; /* Centered items */
-    justify-content: flex-start; /* Aligned to the left */
-    width: 100%;
-    padding-left: 20px; /* Added some padding */
-}
-
-
 /* The launch button. */
 #launch_button {
     background: none;
@@ -3405,9 +3321,9 @@ input:checked + .toggleSwitchSlider:before {
     cursor: pointer;
     font-weight: 900;
     letter-spacing: 2px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Added text shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
     font-size: 20px;
-    padding: 0px 15px 0px 0px; /* Added padding to the right */
+    padding: 0px 15px 0px 0px;
     transition: 0.25s ease;
     outline: none;
 }
@@ -3464,9 +3380,9 @@ input:checked + .toggleSwitchSlider:before {
     line-height: 24px;
     padding: 0px;
     transition: 0.25s ease;
-    font-size: 11px; /* Set font size to match other labels */
+    font-size: 11px;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Added text shadow */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 #server_selection_button:hover,
@@ -3528,12 +3444,9 @@ input:checked + .toggleSwitchSlider:before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*justify-content: space-between;*/
     width: 300px;
-    /*height: 35%;*/
     box-sizing: border-box;
     padding: 15px 0px;
-    /* background-color: #424242; */
     text-align: center;
 }
 
