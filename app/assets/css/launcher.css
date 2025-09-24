@@ -2426,7 +2426,7 @@ input:checked + .toggleSwitchSlider:before {
     padding: 0 50px;
 }
 #landingContainer > #lower > #left {
-    flex: 1; /* Takes up 1 part of the space */
+    flex: 1;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -2435,9 +2435,10 @@ input:checked + .toggleSwitchSlider:before {
     position: static;
     display: flex;
     align-items: center;
+    gap: 20px; /* Added gap for spacing */
 }
 #landingContainer > #lower > #center {
-    flex-shrink: 0; /* Prevents this from shrinking */
+    flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2447,7 +2448,7 @@ input:checked + .toggleSwitchSlider:before {
     position: static;
 }
 #landingContainer > #lower > #right {
-    flex: 1; /* Takes up 1 part of the space */
+    flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -2456,8 +2457,8 @@ input:checked + .toggleSwitchSlider:before {
     position: static;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Align content to the left of this container */
-    flex-grow: 1; /* Allow it to grow */
+    justify-content: flex-start;
+    flex-grow: 1;
 }
 
 
@@ -2466,6 +2467,11 @@ input:checked + .toggleSwitchSlider:before {
  * Landing View (News Styles)                                                  *
  * *
  ******************************************************************************/
+
+/* Hide News Button */
+#newsButton {
+    display: none !important;
+}
 
 /* Main container. */
 #newsContainer {
@@ -2979,6 +2985,13 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
 }
 
+/* Hide unwanted icons */
+#xURL,
+#instagramURL,
+#youtubeURL {
+    display: none !important;
+}
+
 /* Container object which wraps an icon to ensure fluid transitions. */
 .mediaContainer {
     display: flex;
@@ -3071,33 +3084,6 @@ input:checked + .toggleSwitchSlider:before {
     visibility: visible;
     opacity: 1;
     transition-delay:0s;
-}
-
-/* X icon colors. */
-#xSVG:hover,
-#xURL:focus #xSVG {
-    fill: #000000;
-}
-#xSVG:active {
-    fill: #090909;
-}
-
-/* Instagram icon colors. */
-#instagramSVG:hover,
-#instagramURL:focus #instagramSVG {
-    fill: url('#instaFill')
-}
-#instagramSVG:active {
-    fill: url('#instaFill')
-}
-
-/* Youtube icon colors. */
-#youtubeSVG:hover,
-#youtubeURL:focus #youtubeSVG {
-    fill: #f00;
-}
-#youtubeSVG:active {
-    fill: #ea0202;
 }
 
 /* Discord icon colors. */
@@ -3253,55 +3239,6 @@ input:checked + .toggleSwitchSlider:before {
 * Landing View (Bottom Styles) | Center Content
 * * */
 
-/* Button which opens the news view. */
-#newsButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    outline: none;
-}
-#newsButton:hover #newsButtonText,
-#newsButton:focus #newsButtonText {
-    text-shadow: 0px 0px 20px #fff, 0px 0px 20px #fff;
-}
-#newsButton:active {
-    color: #c7c7c7;
-    text-shadow: 0px 0px 20px #c7c7c7, 0px 0px 20px #c7c7c7;
-}
-
-#newsButton:hover #newsButtonSVG,
-#newsButton:focus #newsButtonSVG {
-    -webkit-filter: drop-shadow(0px 0px 2px #fff);
-}
-#newsButton:active #newsButtonSVG .arrowLine {
-    stroke: #c7c7c7;
-}
-#newsButton:active #newsButtonSVG {
-    -webkit-filter: drop-shadow(0px 0px 2px #c7c7c7);
-}
-#newsButton:disabled #newsButtonSVG .arrowLine {
-    stroke: rgba(255, 255, 255, 0.75);
-}
-
-/* Icon which indicates there is new news. */
-#newsButtonAlert {
-    width: 5px;
-    height: 5px;
-    position: absolute;
-    border-radius: 50%;
-    background: red;
-    right: -1px;
-    top: 50%;
-}
-
-/* Arrow image which floats above the news button. */
-#newsButtonSVG {
-    height: 11px;
-    margin-left: -2px;
-    transition: 0.25s ease;
-}
-
-/* Span which contains the news button text. */
 #newsButtonText {
     color: white;
     font-weight: 900;
