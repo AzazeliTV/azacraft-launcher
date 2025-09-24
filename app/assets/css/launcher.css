@@ -2987,8 +2987,13 @@ input:checked + .toggleSwitchSlider:before {
 #xURL,
 #instagramURL,
 #youtubeURL,
-#discordURL {
+#linkURL { /* Kette wird jetzt versteckt */
     display: none !important;
+}
+
+/* Reposition Discord Icon */
+#discordURL {
+    order: -1; /* Schiebt das Icon an die erste Position*/
 }
 
 /* Container object which wraps an icon to ensure fluid transitions. */
