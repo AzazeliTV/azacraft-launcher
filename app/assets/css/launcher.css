@@ -2435,7 +2435,7 @@ input:checked + .toggleSwitchSlider:before {
     position: static;
     display: flex;
     align-items: center;
-    gap: 20px; /* Added gap for spacing */
+    gap: 15px; /* Reduced gap for spacing */
 }
 #landingContainer > #lower > #center {
     flex-shrink: 0;
@@ -2450,14 +2450,15 @@ input:checked + .toggleSwitchSlider:before {
 #landingContainer > #lower > #right {
     flex: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center; /* Centered the content */
     align-items: center;
 }
-#landingContainer > #lower > #right #launch_content {
+#landingContainer > #lower > #right #launch_content,
+#launch_details {
     position: static;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-grow: 1;
 }
 
@@ -2992,6 +2993,12 @@ input:checked + .toggleSwitchSlider:before {
     display: none !important;
 }
 
+/* Reposition Discord Icon */
+#discordURL {
+    order: -1;
+}
+
+
 /* Container object which wraps an icon to ensure fluid transitions. */
 .mediaContainer {
     display: flex;
@@ -3135,6 +3142,7 @@ input:checked + .toggleSwitchSlider:before {
 #mojangStatusWrapper {
     position: relative;
     display: flex;
+    align-items: center; /* Vertically align icon and text */
     cursor: pointer;
 }
 
@@ -3283,9 +3291,7 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Launch details main container, hidden until launch processing begins. */
 #launch_details {
-    position: relative;
-    top: 25px;
-    display: none;
+    display: none; /* Keep hidden by default */
 }
  
 /* Left side of launch details container, displays percentage and a divider. */
