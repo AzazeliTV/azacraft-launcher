@@ -41,23 +41,29 @@ document.addEventListener('click', closeSettingsSelect)
 bindSettingsSelect()
 
 
-function bindFileSelectors(){
-    for(let ele of document.getElementsByClassName('settingsFileSelButton')){
-        
+function bindFileSelectors() {
+    for (let ele of document.getElementsByClassName('settingsFileSelButton')) {
+
         ele.onclick = async e => {
             const isJavaExecSel = ele.id === 'settingsJavaExecSel'
             const directoryDialog = ele.hasAttribute('dialogDirectory') && ele.getAttribute('dialogDirectory') == 'true'
             const properties = directoryDialog ? ['openDirectory', 'createDirectory'] : ['openFile']
 
-            const options = {
-                properties
-            }
+            const options = { properties }
 
-            if(ele.hasAttribute('dialogTitle')) {
+            if (ele.hasAttribute('dialogTitle')) {
                 options.title = ele.getAttribute('dialogTitle')
             }
 
-            if(isJavaExecSel && process.platform === 'win32') {
+            // ⭐ NEU: Beim Ordner-Dialog (Datenverzeichnis) im aktuellen Pfad starten.
+            if (directoryDialog) {
+                const currentVal = ele.previousElementSibling.value
+                if (currentVal && currentVal.trim() !== '') {
+                    options.defaultPath = currentVal.trim()
+                }
+            }
+
+            if (isJavaExecSel && process.platform === 'win32') {
                 options.filters = [
                     { name: Lang.queryJS('settings.fileSelectors.executables'), extensions: ['exe'] },
                     { name: Lang.queryJS('settings.fileSelectors.allFiles'), extensions: ['*'] }
@@ -65,15 +71,16 @@ function bindFileSelectors(){
             }
 
             const res = await remote.dialog.showOpenDialog(remote.getCurrentWindow(), options)
-            if(!res.canceled) {
+            if (!res.canceled) {
                 ele.previousElementSibling.value = res.filePaths[0]
-                if(isJavaExecSel) {
+                if (isJavaExecSel) {
                     await populateJavaExecDetails(ele.previousElementSibling.value)
                 }
             }
         }
     }
 }
+
 
 bindFileSelectors()
 
