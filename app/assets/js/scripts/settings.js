@@ -812,6 +812,23 @@ function bindModsToggleSwitch(){
     })
 }
 
+function bindModsSectionsDropdown() {
+    const sections = document.querySelectorAll('#settingsModsContainer .settingsModsSection')
+
+    sections.forEach(section => {
+        const header = section.querySelector('.settingsModsHeader')
+        if (!header) return
+
+        header.addEventListener('click', () => {
+            if (section.hasAttribute('collapsed')) {
+                section.removeAttribute('collapsed')
+            } else {
+                section.setAttribute('collapsed', '')
+            }
+        })
+    })
+}
+
 
 /**
  * Save the mod configuration based on the UI values.
@@ -1137,6 +1154,7 @@ async function prepareModsTab(first){
     bindDropinModFileSystemButton()
     bindShaderpackButton()
     bindModsToggleSwitch()
+	bindModsSectionsDropdown()
     await loadSelectedServerOnModsTab()
 }
 
@@ -1572,157 +1590,3 @@ async function prepareSettings(first = false) {
 
 // Prepare the settings UI on startup.
 //prepareSettings(true)
-
-;(() => {
-  'use strict';
-
-  // --- Notbremse: auf true setzen, um alles abzuschalten ---
-  if (window.__DISABLE_MODS_DROPDOWN === true) return;
-
-  const STATE_KEY = 'modsDropdownState';
-  const IDS = ['settingsReqModsContent','settingsOptModsContent','settingsDropinModsContent'];
-
-  // Route-Check: nur auf der Settings-Seite aktiv werden.
-  function onSettingsRoute(){
-    // Helios/Launcher nutzt meist hashes. Fallback: prüfe, ob Settings-View im DOM sichtbar ist.
-    if (typeof location.hash === 'string' && /settings/i.test(location.hash)) return true;
-    const v = document.getElementById('settingsView');
-    return !!(v && v.offsetParent !== null);
-  }
-
-  function containers(){
-    const n = IDS.map(id => document.getElementById(id));
-    const any = n.some(Boolean);
-    return any ? n : null;
-  }
-
-  // Einmalige Initialisierung, wenn wir wirklich im Settings-Tab sind
-  function tryInit(){
-    if (!onSettingsRoute()) return false;
-    const nodes = containers();
-    if (!nodes) return false;
-    init(nodes[0], nodes[1], nodes[2]);
-    return true;
-  }
-
-  // Auf Navigation hören (hashchange), damit wir erst beim Öffnen der Settings laufen.
-  window.addEventListener('hashchange', () => {
-    // init nur einmal pro Eintritt
-    if (!document.querySelector('.modsDDSection')) setTimeout(tryInit, 0);
-  });
-
-  // Beim ersten Laden auch einmal probieren
-  if (!document.querySelector('.modsDDSection')) {
-    // kleine Verzögerung, bis die Settings-View gerendert ist
-    let tries = 0, t = setInterval(() => {
-      if (tryInit() || ++tries > 60) clearInterval(t);
-    }, 250);
-  }
-
-  function init(reqC, optC, dropC){
-    // Bereits initialisiert?
-    if (document.querySelector('.modsDDSection')) return;
-
-    let state = { req:true, opt:true, dropin:true };
-    try { state = { ...state, ...JSON.parse(localStorage.getItem(STATE_KEY) || '{}') } } catch {}
-
-    function makeSection(key, title, contentEl){
-      if (!contentEl || !contentEl.parentElement) return null;
-      const parent = contentEl.parentElement;
-
-      // Section + Header
-      const section = document.createElement('section');
-      section.className = 'modsDDSection'; section.id = key + 'ModsSection';
-
-      const header = document.createElement('button');
-      header.type = 'button';
-      header.className = 'modsDDHeader';
-      header.setAttribute('aria-expanded','true');
-      header.dataset.section = key;
-
-      const left = document.createElement('div');
-      left.className = 'modsDDHeaderLeft';
-
-      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('viewBox','0 0 24 24'); svg.classList.add('modsDDChevron');
-      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-      p.setAttribute('fill','currentColor'); p.setAttribute('d','M7 10l5 5 5-5z'); svg.appendChild(p);
-
-      const titleEl = document.createElement('span');
-      titleEl.className = 'modsDDTitle'; titleEl.textContent = title;
-
-      const badge = document.createElement('span');
-      badge.className = 'modsDDBadge'; badge.id = key + 'ModsCount'; badge.textContent = '0';
-
-      left.appendChild(svg); left.appendChild(titleEl);
-      header.appendChild(left); header.appendChild(badge);
-
-      // Collapsible (CSS-unabhängiger Fallback über max-height)
-      const list = document.createElement('div');
-      list.className = 'modsDDListNoCSS';
-      const inner = document.createElement('div');
-      inner.className = 'modsDDListInnerNoCSS';
-      inner.appendChild(contentEl);
-
-      Object.assign(list.style, {
-        overflow: 'hidden',
-        maxHeight: '0px',
-        transition: 'max-height .25s ease'
-      });
-
-      section.appendChild(header);
-      section.appendChild(list);
-      parent.insertBefore(section, contentEl); // in-place einhängen
-      list.appendChild(inner);
-
-      function setOpen(open){
-        header.toggleAttribute('expanded', open);
-        header.setAttribute('aria-expanded', String(open));
-        list.style.maxHeight = open ? (inner.scrollHeight + 12) + 'px' : '0px';
-      }
-
-      setTimeout(() => setOpen(!!state[key]), 0);
-
-      header.addEventListener('click', ()=>{
-        const open = !(list.style.maxHeight && list.style.maxHeight !== '0px');
-        const next = !open;
-        setOpen(next);
-        state[key] = next;
-        try { localStorage.setItem(STATE_KEY, JSON.stringify(state)) } catch {}
-        recount();
-      });
-
-      const mo = new MutationObserver(() => {
-        // Höhe aktualisieren, wenn geöffnet
-        if (list.style.maxHeight && list.style.maxHeight !== '0px') {
-          list.style.maxHeight = (inner.scrollHeight + 12) + 'px';
-        }
-        recount();
-      });
-      mo.observe(inner, { childList:true, subtree:true });
-
-      return { badge, holder: contentEl };
-    }
-
-    const sections = [];
-    if (reqC)  sections.push(makeSection('req',  'Benötigte Mods', reqC));
-    if (optC)  sections.push(makeSection('opt',  'Optionale Mods', optC));
-    if (dropC) sections.push(makeSection('dropin','Drop-in Mods', dropC));
-
-    function recount(){
-      sections.forEach(s => {
-        if (!s) return;
-        const n = s.holder.querySelectorAll('.settingsBaseMod, .settingsMod, .settingsSubMod, .settingsDropinMod').length;
-        s.badge.textContent = String(n || 0);
-        if (n === 0 && !s.holder.querySelector('.modsDDEmpty')) {
-          const e = document.createElement('div'); e.className = 'modsDDEmpty'; e.textContent = 'Keine Einträge.';
-          s.holder.appendChild(e);
-        }
-      });
-    }
-
-    setTimeout(recount, 0);
-    window.__applyModsCounters = recount;
-    try { console.log('[ModsDropdown] initialized'); } catch {}
-  }
-})();

@@ -133,25 +133,22 @@
                 </div>
             </div>
             <div id="settingsModsContainer">
-                <div id="settingsReqModsContainer">
-                    <div class="settingsModsHeader"><%- lang('settings.requiredMods') %></div>
-                    <div id="settingsReqModsContent">
+				<div id="settingsReqModsContainer" class="settingsModsSection">
+					<div class="settingsModsHeader"><%- lang('settings.requiredMods') %></div>
+					<div id="settingsReqModsContent" class="settingsModsBody"></div>
+				</div>
 
-                    </div>
-                </div>
-                <div id="settingsOptModsContainer">
-                    <div class="settingsModsHeader"><%- lang('settings.optionalMods') %></div>
-                    <div id="settingsOptModsContent">
-                        
-                    </div>
-                </div>
-                <div id="settingsDropinModsContainer">
-                    <div class="settingsModsHeader"><%- lang('settings.dropinMods') %></div>
-                    <button id="settingsDropinFileSystemButton"><%- lang('settings.addMods') %> <span id="settingsDropinRefreshNote"><%- lang('settings.dropinRefreshNote') %></span></button>
-                    <div id="settingsDropinModsContent">
-                        
-                    </div>
-                </div>
+				<div id="settingsOptModsContainer" class="settingsModsSection">
+					<div class="settingsModsHeader"><%- lang('settings.optionalMods') %></div>
+					<div id="settingsOptModsContent" class="settingsModsBody"></div>
+				</div>
+
+				<div id="settingsDropinModsContainer" class="settingsModsSection">
+					<div class="settingsModsHeader"><%- lang('settings.dropinMods') %></div>
+					<button id="settingsDropinFileSystemButton"><%- lang('settings.addMods') %> <span id="settingsDropinRefreshNote"><%- lang('settings.dropinRefreshNote') %></span></button>
+					<div id="settingsDropinModsContent" class="settingsModsBody"></div>
+				</div>
+            </div>
                 <div id="settingsShadersContainer">
                     <div class="settingsModsHeader"><%- lang('settings.shaderpacks') %></div>
                     <div id="settingsShaderpackDesc"><%- lang('settings.shaderpackDesc') %></div>
