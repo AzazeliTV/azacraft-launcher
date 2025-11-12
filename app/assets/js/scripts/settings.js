@@ -244,7 +244,8 @@ let selectedSettingsTab = 'settingsTabAccount'
 /**
  * Modify the settings container UI when the scroll threshold reaches
  * a certain poin.
- * * @param {UIEvent} e The scroll event.
+ * 
+ * @param {UIEvent} e The scroll event.
  */
 function settingsTabScrollListener(e){
     if(e.target.scrollTop > Number.parseFloat(getComputedStyle(e.target.firstElementChild).marginTop)){
@@ -270,7 +271,8 @@ function setupSettingsTabs(){
 /**
  * Settings nav item onclick lisener. Function is exposed so that
  * other UI elements can quickly toggle to a certain tab from other views.
- * * @param {Element} ele The nav item which has been clicked.
+ * 
+ * @param {Element} ele The nav item which has been clicked.
  * @param {boolean} fade Optional. True to fade transition.
  */
 function settingsNavItemListener(ele, fade = true){
@@ -319,7 +321,8 @@ const settingsNavDone = document.getElementById('settingsNavDone')
 
 /**
  * Set if the settings save (done) button is disabled.
- * * @param {boolean} v True to disable, false to enable.
+ * 
+ * @param {boolean} v True to disable, false to enable.
  */
 function settingsSaveDisabled(v){
     settingsNavDone.disabled = v
@@ -508,7 +511,8 @@ function bindAuthAccountLogOut(){
 let msAccDomElementCache
 /**
  * Process a log out.
- * * @param {Element} val The log out button element.
+ * 
+ * @param {Element} val The log out button element.
  * @param {boolean} isLastAccount If this logout is on the last added account.
  */
 function processLogOut(val, isLastAccount){
@@ -603,7 +607,8 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
 /**
  * Refreshes the status of the selected account on the auth account
  * elements.
- * * @param {string} uuid The UUID of the new selected account.
+ * 
+ * @param {string} uuid The UUID of the new selected account.
  */
 function refreshAuthAccountSelected(uuid){
     Array.from(document.getElementsByClassName('settingsAuthAccount')).map((val) => {
@@ -726,7 +731,8 @@ async function resolveModsForUI(){
 
 /**
  * Recursively build the mod UI elements.
- * * @param {Object[]} mdls An array of modules to parse.
+ * 
+ * @param {Object[]} mdls An array of modules to parse.
  * @param {boolean} submodules Whether or not we are parsing submodules.
  * @param {Object} servConf The server configuration object for this module level.
  */
@@ -799,68 +805,18 @@ function parseModulesForUI(mdls, submodules, servConf){
  * Bind functionality to mod config toggle switches. Switching the value
  * will also switch the status color on the left of the mod UI.
  */
-function bindModsToggleSwitch () {
-  const root = document.getElementById('settingsModsContainer');
-  if (!root) return;
-
-  const switches = root.querySelectorAll('[formod]');
-  if (!switches.length) return;
-
-  switches.forEach(sw => {
-    const handler = () => {
-      const targetId = sw.getAttribute('formod');
-      if (!targetId) return;
-      const target = document.getElementById(targetId);
-      if (!target) return;
-      if (sw.checked) target.setAttribute('enabled', '');
-      else target.removeAttribute('enabled');
-    };
-
-    // mirror initial
-    try { handler(); } catch (e) {}
-    sw.addEventListener('change', handler);
-  });
+function bindModsToggleSwitch(){
+    const sEls = settingsModsContainer.querySelectorAll('[formod]')
+    Array.from(sEls).map((v, index, arr) => {
+        v.onchange = () => {
+            if(v.checked) {
+                document.getElementById(v.getAttribute('formod')).setAttribute('enabled', '')
+            } else {
+                document.getElementById(v.getAttribute('formod')).removeAttribute('enabled')
+            }
+        }
+    })
 }
-
-
-function bindModsSectionsDropdown () {
-  const root = document.getElementById('settingsModsContainer');
-  if (!root) return;
-
-  const headers = root.querySelectorAll('.settingsModsHeader');
-  if (!headers.length) return;
-
-  headers.forEach(header => {
-    header.setAttribute('role', 'button');
-    header.setAttribute('tabindex', '0');
-
-    const clickToggle = () => {
-      const section = header.closest(
-        '#settingsReqModsContainer, #settingsOptModsContainer, #settingsDropinModsContainer, #settingsShadersContainer'
-      ) || header.parentElement;
-
-      if (!section) return;
-
-      section.toggleAttribute('collapsed');
-
-      const content = section.querySelector(
-        '#settingsReqModsContent, #settingsOptModsContent, #settingsDropinModsContent, #settingsShadersContent, .settingsModsContent'
-      );
-      if (content) {
-        content.style.display = section.hasAttribute('collapsed') ? 'none' : '';
-      }
-    };
-
-    header.addEventListener('click', clickToggle);
-    header.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Enter' || ev.key === ' ') {
-        ev.preventDefault();
-        clickToggle();
-      }
-    });
-  });
-}
-
 
 
 /**
@@ -875,7 +831,8 @@ function saveModConfiguration(){
 
 /**
  * Recursively save mod config with submods.
- * * @param {Object} modConf Mod config object to save.
+ * 
+ * @param {Object} modConf Mod config object to save.
  */
 function _saveModConfiguration(modConf){
     for(let m of Object.entries(modConf)){
@@ -1187,7 +1144,6 @@ async function prepareModsTab(first){
     bindDropinModFileSystemButton()
     bindShaderpackButton()
     bindModsToggleSwitch()
-	bindModsSectionsDropdown()
     await loadSelectedServerOnModsTab()
 }
 
@@ -1271,7 +1227,8 @@ settingsMaxRAMRange.onchange = (e) => {
 
 /**
  * Calculate common values for a ranged slider.
- * * @param {Element} v The range slider to calculate against. 
+ * 
+ * @param {Element} v The range slider to calculate against. 
  * @returns {Object} An object with meta values for the provided ranged slider.
  */
 function calculateRangeSliderMeta(v){
@@ -1336,7 +1293,8 @@ function bindRangeSlider(){
 
 /**
  * Update a ranged slider's value and position.
- * * @param {Element} element The ranged slider to update.
+ * 
+ * @param {Element} element The ranged slider to update.
  * @param {string | number} value The new value for the ranged slider.
  * @param {number} notch The notch that the slider should now be at.
  */
@@ -1381,7 +1339,8 @@ function populateMemoryStatus(){
 /**
  * Validate the provided executable path and display the data on
  * the UI.
- * * @param {string} execPath The executable path to populate against.
+ * 
+ * @param {string} execPath The executable path to populate against.
  */
 async function populateJavaExecDetails(execPath){
     const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
@@ -1457,7 +1416,8 @@ document.getElementById('settingsAboutDevToolsButton').onclick = (e) => {
 
 /**
  * Return whether or not the provided version is a prerelease.
- * * @param {string} version The semver version to test.
+ * 
+ * @param {string} version The semver version to test.
  * @returns {boolean} True if the version is a prerelease, otherwise false.
  */
 function isPrerelease(version){
@@ -1468,7 +1428,8 @@ function isPrerelease(version){
 /**
  * Utility method to display version information on the
  * About and Update settings tabs.
- * * @param {string} version The semver version to display.
+ * 
+ * @param {string} version The semver version to display.
  * @param {Element} valueElement The value element.
  * @param {Element} titleElement The title element.
  * @param {Element} checkElement The check mark element.
@@ -1547,7 +1508,8 @@ const settingsUpdateActionButton   = document.getElementById('settingsUpdateActi
 
 /**
  * Update the properties of the update action button.
- * * @param {string} text The new button text.
+ * 
+ * @param {string} text The new button text.
  * @param {boolean} disabled Optional. Disable or enable the button
  * @param {function} handler Optional. New button event handler.
  */
@@ -1561,7 +1523,8 @@ function settingsUpdateButtonStatus(text, disabled = false, handler = null){
 
 /**
  * Populate the update tab with relevant information.
- * * @param {Object} data The update data.
+ * 
+ * @param {Object} data The update data.
  */
 function populateSettingsUpdateInformation(data){
     if(data != null){
@@ -1593,7 +1556,8 @@ function populateSettingsUpdateInformation(data){
 
 /**
  * Prepare update tab for display.
- * * @param {Object} data The update data.
+ * 
+ * @param {Object} data The update data.
  */
 function prepareUpdateTab(data = null){
     populateSettingsUpdateInformation(data)
@@ -1605,7 +1569,8 @@ function prepareUpdateTab(data = null){
 
 /**
   * Prepare the entire settings UI.
-  * * @param {boolean} first Whether or not it is the first load.
+  * 
+  * @param {boolean} first Whether or not it is the first load.
   */
 async function prepareSettings(first = false) {
     if(first){
@@ -1623,16 +1588,3 @@ async function prepareSettings(first = false) {
 
 // Prepare the settings UI on startup.
 //prepareSettings(true)
-
-// --- Safe Init for Mods bindings ---
-(function(){
-  function safeInitMods(){
-    try { bindModsSectionsDropdown(); } catch(e){ console.error('[settings] bindModsSectionsDropdown failed', e); }
-    try { bindModsToggleSwitch(); } catch(e){ console.error('[settings] bindModsToggleSwitch failed', e); }
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', safeInitMods, { once: true });
-  } else {
-    safeInitMods();
-  }
-})();
