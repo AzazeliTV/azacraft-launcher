@@ -1589,4 +1589,5 @@ async function prepareSettings(first = false) {
 // Prepare the settings UI on startup.
 //prepareSettings(true)
 
-try { require('./settings_mods_dom_wrap_wait.js') } catch (e) { /* ignore */ }
+try { require('./settings_mods_dom_wrap_keep.js') } catch (e) { /* ignore */ }
+
