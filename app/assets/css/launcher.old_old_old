@@ -1643,7 +1643,8 @@ input:checked + .toggleSwitchSlider:before {
     padding-bottom: 25px;
 }
 
-/* Main content containers for mod elements. */
+/* Main content containers for mod elements. (JETZT VOM DROPDOWN-SKRIPT VERWALTET) */
+/*
 #settingsReqModsContent,
 #settingsOptModsContent,
 #settingsDropinModsContent {
@@ -1652,6 +1653,7 @@ input:checked + .toggleSwitchSlider:before {
     border-radius: 3px;
     color: white;
 }
+*/
 
 /* Mod elements. */
 .settingsMod,
@@ -4052,3 +4054,5 @@ button[disabled],
         transform: translateZ(0);
     }
 }
+
+
