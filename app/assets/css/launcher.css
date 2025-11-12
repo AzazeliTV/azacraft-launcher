@@ -4091,3 +4091,14 @@ button[disabled],
 .settingsModsSection[collapsed] .settingsModsBody {
     display: none;
 }
+
+/* Mods: Section einklappen */
+#settingsReqModsContainer[collapsed] #settingsReqModsContent,
+#settingsOptModsContainer[collapsed] #settingsOptModsContent,
+#settingsDropinModsContainer[collapsed] #settingsDropinModsContent,
+#settingsShadersContainer[collapsed] #settingsShadersContent {
+  display: none;
+  /* Optional hübsch: */
+  /* transition: height .2s ease, opacity .2s ease; */
+}
+

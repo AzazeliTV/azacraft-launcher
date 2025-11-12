@@ -799,35 +799,68 @@ function parseModulesForUI(mdls, submodules, servConf){
  * Bind functionality to mod config toggle switches. Switching the value
  * will also switch the status color on the left of the mod UI.
  */
-function bindModsToggleSwitch(){
-    const sEls = settingsModsContainer.querySelectorAll('[formod]')
-    Array.from(sEls).map((v, index, arr) => {
-        v.onchange = () => {
-            if(v.checked) {
-                document.getElementById(v.getAttribute('formod')).setAttribute('enabled', '')
-            } else {
-                document.getElementById(v.getAttribute('formod')).removeAttribute('enabled')
-            }
-        }
-    })
+function bindModsToggleSwitch () {
+  const root = document.getElementById('settingsModsContainer');
+  if (!root) return;
+
+  const switches = root.querySelectorAll('[formod]');
+  if (!switches.length) return;
+
+  switches.forEach(sw => {
+    const handler = () => {
+      const targetId = sw.getAttribute('formod');
+      if (!targetId) return;
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      if (sw.checked) target.setAttribute('enabled', '');
+      else target.removeAttribute('enabled');
+    };
+
+    // mirror initial
+    try { handler(); } catch (e) {}
+    sw.addEventListener('change', handler);
+  });
 }
 
-function bindModsSectionsDropdown() {
-    const sections = document.querySelectorAll('#settingsModsContainer .settingsModsSection')
 
-    sections.forEach(section => {
-        const header = section.querySelector('.settingsModsHeader')
-        if (!header) return
+function bindModsSectionsDropdown () {
+  const root = document.getElementById('settingsModsContainer');
+  if (!root) return;
 
-        header.addEventListener('click', () => {
-            if (section.hasAttribute('collapsed')) {
-                section.removeAttribute('collapsed')
-            } else {
-                section.setAttribute('collapsed', '')
-            }
-        })
-    })
+  const headers = root.querySelectorAll('.settingsModsHeader');
+  if (!headers.length) return;
+
+  headers.forEach(header => {
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+
+    const clickToggle = () => {
+      const section = header.closest(
+        '#settingsReqModsContainer, #settingsOptModsContainer, #settingsDropinModsContainer, #settingsShadersContainer'
+      ) || header.parentElement;
+
+      if (!section) return;
+
+      section.toggleAttribute('collapsed');
+
+      const content = section.querySelector(
+        '#settingsReqModsContent, #settingsOptModsContent, #settingsDropinModsContent, #settingsShadersContent, .settingsModsContent'
+      );
+      if (content) {
+        content.style.display = section.hasAttribute('collapsed') ? 'none' : '';
+      }
+    };
+
+    header.addEventListener('click', clickToggle);
+    header.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault();
+        clickToggle();
+      }
+    });
+  });
 }
+
 
 
 /**
@@ -1590,3 +1623,16 @@ async function prepareSettings(first = false) {
 
 // Prepare the settings UI on startup.
 //prepareSettings(true)
+
+// --- Safe Init for Mods bindings ---
+(function(){
+  function safeInitMods(){
+    try { bindModsSectionsDropdown(); } catch(e){ console.error('[settings] bindModsSectionsDropdown failed', e); }
+    try { bindModsToggleSwitch(); } catch(e){ console.error('[settings] bindModsToggleSwitch failed', e); }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', safeInitMods, { once: true });
+  } else {
+    safeInitMods();
+  }
+})();
