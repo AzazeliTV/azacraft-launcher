@@ -1726,5 +1726,3 @@ async function prepareSettings(first = false) {
     try { console.log('[ModsDropdown] initialized'); } catch {}
   }
 })();
-
-// DER ZWEITE (DOPPELTE) BLOCK WURDE VON HIER ENTFERNT.
