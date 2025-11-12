@@ -244,8 +244,7 @@ let selectedSettingsTab = 'settingsTabAccount'
 /**
  * Modify the settings container UI when the scroll threshold reaches
  * a certain poin.
- * 
- * @param {UIEvent} e The scroll event.
+ * * @param {UIEvent} e The scroll event.
  */
 function settingsTabScrollListener(e){
     if(e.target.scrollTop > Number.parseFloat(getComputedStyle(e.target.firstElementChild).marginTop)){
@@ -271,8 +270,7 @@ function setupSettingsTabs(){
 /**
  * Settings nav item onclick lisener. Function is exposed so that
  * other UI elements can quickly toggle to a certain tab from other views.
- * 
- * @param {Element} ele The nav item which has been clicked.
+ * * @param {Element} ele The nav item which has been clicked.
  * @param {boolean} fade Optional. True to fade transition.
  */
 function settingsNavItemListener(ele, fade = true){
@@ -321,8 +319,7 @@ const settingsNavDone = document.getElementById('settingsNavDone')
 
 /**
  * Set if the settings save (done) button is disabled.
- * 
- * @param {boolean} v True to disable, false to enable.
+ * * @param {boolean} v True to disable, false to enable.
  */
 function settingsSaveDisabled(v){
     settingsNavDone.disabled = v
@@ -511,8 +508,7 @@ function bindAuthAccountLogOut(){
 let msAccDomElementCache
 /**
  * Process a log out.
- * 
- * @param {Element} val The log out button element.
+ * * @param {Element} val The log out button element.
  * @param {boolean} isLastAccount If this logout is on the last added account.
  */
 function processLogOut(val, isLastAccount){
@@ -607,8 +603,7 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
 /**
  * Refreshes the status of the selected account on the auth account
  * elements.
- * 
- * @param {string} uuid The UUID of the new selected account.
+ * * @param {string} uuid The UUID of the new selected account.
  */
 function refreshAuthAccountSelected(uuid){
     Array.from(document.getElementsByClassName('settingsAuthAccount')).map((val) => {
@@ -731,8 +726,7 @@ async function resolveModsForUI(){
 
 /**
  * Recursively build the mod UI elements.
- * 
- * @param {Object[]} mdls An array of modules to parse.
+ * * @param {Object[]} mdls An array of modules to parse.
  * @param {boolean} submodules Whether or not we are parsing submodules.
  * @param {Object} servConf The server configuration object for this module level.
  */
@@ -831,8 +825,7 @@ function saveModConfiguration(){
 
 /**
  * Recursively save mod config with submods.
- * 
- * @param {Object} modConf Mod config object to save.
+ * * @param {Object} modConf Mod config object to save.
  */
 function _saveModConfiguration(modConf){
     for(let m of Object.entries(modConf)){
@@ -1227,8 +1220,7 @@ settingsMaxRAMRange.onchange = (e) => {
 
 /**
  * Calculate common values for a ranged slider.
- * 
- * @param {Element} v The range slider to calculate against. 
+ * * @param {Element} v The range slider to calculate against. 
  * @returns {Object} An object with meta values for the provided ranged slider.
  */
 function calculateRangeSliderMeta(v){
@@ -1293,8 +1285,7 @@ function bindRangeSlider(){
 
 /**
  * Update a ranged slider's value and position.
- * 
- * @param {Element} element The ranged slider to update.
+ * * @param {Element} element The ranged slider to update.
  * @param {string | number} value The new value for the ranged slider.
  * @param {number} notch The notch that the slider should now be at.
  */
@@ -1339,8 +1330,7 @@ function populateMemoryStatus(){
 /**
  * Validate the provided executable path and display the data on
  * the UI.
- * 
- * @param {string} execPath The executable path to populate against.
+ * * @param {string} execPath The executable path to populate against.
  */
 async function populateJavaExecDetails(execPath){
     const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
@@ -1416,8 +1406,7 @@ document.getElementById('settingsAboutDevToolsButton').onclick = (e) => {
 
 /**
  * Return whether or not the provided version is a prerelease.
- * 
- * @param {string} version The semver version to test.
+ * * @param {string} version The semver version to test.
  * @returns {boolean} True if the version is a prerelease, otherwise false.
  */
 function isPrerelease(version){
@@ -1428,8 +1417,7 @@ function isPrerelease(version){
 /**
  * Utility method to display version information on the
  * About and Update settings tabs.
- * 
- * @param {string} version The semver version to display.
+ * * @param {string} version The semver version to display.
  * @param {Element} valueElement The value element.
  * @param {Element} titleElement The title element.
  * @param {Element} checkElement The check mark element.
@@ -1508,8 +1496,7 @@ const settingsUpdateActionButton   = document.getElementById('settingsUpdateActi
 
 /**
  * Update the properties of the update action button.
- * 
- * @param {string} text The new button text.
+ * * @param {string} text The new button text.
  * @param {boolean} disabled Optional. Disable or enable the button
  * @param {function} handler Optional. New button event handler.
  */
@@ -1523,8 +1510,7 @@ function settingsUpdateButtonStatus(text, disabled = false, handler = null){
 
 /**
  * Populate the update tab with relevant information.
- * 
- * @param {Object} data The update data.
+ * * @param {Object} data The update data.
  */
 function populateSettingsUpdateInformation(data){
     if(data != null){
@@ -1556,8 +1542,7 @@ function populateSettingsUpdateInformation(data){
 
 /**
  * Prepare update tab for display.
- * 
- * @param {Object} data The update data.
+ * * @param {Object} data The update data.
  */
 function prepareUpdateTab(data = null){
     populateSettingsUpdateInformation(data)
@@ -1569,8 +1554,7 @@ function prepareUpdateTab(data = null){
 
 /**
   * Prepare the entire settings UI.
-  * 
-  * @param {boolean} first Whether or not it is the first load.
+  * * @param {boolean} first Whether or not it is the first load.
   */
 async function prepareSettings(first = false) {
     if(first){
@@ -1743,147 +1727,4 @@ async function prepareSettings(first = false) {
   }
 })();
 
-;(() => {
-  'use strict';
-  // === Mods Dropdown (route-gated, inline, semicolon-safe) ===
-  if (window.__DISABLE_MODS_DROPDOWN === true) return;
-
-  const STATE_KEY = 'modsDropdownState';
-  const IDS = ['settingsReqModsContent','settingsOptModsContent','settingsDropinModsContent'];
-
-  function onSettingsRoute(){
-    try {
-      if (typeof location.hash === 'string' && /settings/i.test(location.hash)) return true;
-    } catch { }
-    const v = document.getElementById('settingsView');
-    return !!(v && v.offsetParent !== null);
-  }
-
-  const byId = id => document.getElementById(id);
-  const findContainers = () => IDS.map(byId);
-  const hasAny = (arr) => Array.isArray(arr) && arr.some(Boolean);
-
-  function tryInitOnce(){
-    if (!onSettingsRoute()) return false;
-    const nodes = findContainers();
-    if (!hasAny(nodes)) return false;
-    init(nodes[0], nodes[1], nodes[2]);
-    return true;
-  }
-
-  // Re-run when navigating to settings
-  window.addEventListener('hashchange', () => {
-    if (!document.querySelector('.modsDDSection')) setTimeout(tryInitOnce, 0);
-  });
-
-  // First attempt(s)
-  let tries = 0, t = setInterval(() => {
-    if (tryInitOnce() || ++tries > 80) clearInterval(t);
-  }, 200);
-
-  function init(reqC, optC, dropC){
-    if (document.querySelector('.modsDDSection')) return;
-
-    let state = { req:true, opt:true, dropin:true };
-    try { state = { ...state, ...JSON.parse(localStorage.getItem(STATE_KEY) || '{}') } } catch { }
-
-    function makeSection(key, title, contentEl){
-      if (!contentEl || !contentEl.parentElement) return null;
-      const parent = contentEl.parentElement;
-
-      // Section + Header
-      const section = document.createElement('section');
-      section.className = 'modsDDSection'; section.id = key + 'ModsSection';
-
-      const header = document.createElement('button');
-      header.type = 'button';
-      header.className = 'modsDDHeader';
-      header.setAttribute('aria-expanded','true');
-      header.dataset.section = key;
-
-      const left = document.createElement('div');
-      left.className = 'modsDDHeaderLeft';
-
-      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('viewBox','0 0 24 24'); svg.classList.add('modsDDChevron');
-      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-      p.setAttribute('fill','currentColor'); p.setAttribute('d','M7 10l5 5 5-5z'); svg.appendChild(p);
-
-      const titleEl = document.createElement('span');
-      titleEl.className = 'modsDDTitle'; titleEl.textContent = title;
-
-      const badge = document.createElement('span');
-      badge.className = 'modsDDBadge'; badge.id = key + 'ModsCount'; badge.textContent = '0';
-
-      left.appendChild(svg); left.appendChild(titleEl);
-      header.appendChild(left); header.appendChild(badge);
-
-      // Collapsible (CSS-independent via max-height inline)
-      const list = document.createElement('div');
-      list.className = 'modsDDListNoCSS';
-      const inner = document.createElement('div');
-      inner.className = 'modsDDListInnerNoCSS';
-      inner.appendChild(contentEl);
-
-      Object.assign(list.style, {
-        overflow: 'hidden',
-        maxHeight: '0px',
-        transition: 'max-height .25s ease'
-      });
-
-      section.appendChild(header);
-      section.appendChild(list);
-      parent.insertBefore(section, contentEl); // in-place mount before original
-      list.appendChild(inner);
-
-      function setOpen(open){
-        header.toggleAttribute('expanded', open);
-        header.setAttribute('aria-expanded', String(open));
-        list.style.maxHeight = open ? (inner.scrollHeight + 12) + 'px' : '0px';
-      }
-
-      setTimeout(() => setOpen(!!state[key]), 0);
-
-      header.addEventListener('click', () => {
-        const openNow = !(list.style.maxHeight === '0px' || !list.style.maxHeight);
-        const next = !openNow;
-        setOpen(next);
-        state[key] = next;
-        try { localStorage.setItem(STATE_KEY, JSON.stringify(state)) } catch { }
-        recount();
-      });
-
-      const mo = new MutationObserver(() => {
-        if (list.style.maxHeight && list.style.maxHeight !== '0px') {
-          list.style.maxHeight = (inner.scrollHeight + 12) + 'px';
-        }
-        recount();
-      });
-      mo.observe(inner, { childList:true, subtree:true });
-
-      return { badge, holder: contentEl };
-    }
-
-    const sections = [];
-    if (reqC)  sections.push(makeSection('req',  'Benötigte Mods', reqC));
-    if (optC)  sections.push(makeSection('opt',  'Optionale Mods', optC));
-    if (dropC) sections.push(makeSection('dropin','Drop-in Mods', dropC));
-
-    function recount(){
-      sections.forEach(s => {
-        if (!s) return;
-        const n = s.holder.querySelectorAll('.settingsBaseMod, .settingsMod, .settingsSubMod, .settingsDropinMod').length;
-        s.badge.textContent = String(n || 0);
-        if (n === 0 && !s.holder.querySelector('.modsDDEmpty')) {
-          const e = document.createElement('div'); e.className = 'modsDDEmpty'; e.textContent = 'Keine Einträge.';
-          s.holder.appendChild(e);
-        }
-      });
-    }
-
-    setTimeout(recount, 0);
-    window.__applyModsCounters = recount;
-    try { console.log('[ModsDropdown] initialized') } catch { }
-  }
-})();
-
+// DER ZWEITE (DOPPELTE) BLOCK WURDE VON HIER ENTFERNT.
