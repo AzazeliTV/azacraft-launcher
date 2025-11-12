@@ -1589,267 +1589,115 @@ async function prepareSettings(first = false) {
 // Prepare the settings UI on startup.
 //prepareSettings(true)
 
-// === Mods Dropdown (in-place, inline, no EJS) ===
+// === Mods Dropdown (CSS-unabhängiger Fallback, in-place, safe) ===
 (() => {
-  const TAG = '[ModsDropdownInline]';
-  const log = (...a) => { try { console.log(TAG, ...a) } catch(e){} };
-
-  // IDs deiner vorhandenen Container:
   const IDS = ['settingsReqModsContent','settingsOptModsContent','settingsDropinModsContent'];
+  const start = performance.now(), TIMEOUT = 30000;
+  const byId = id => document.getElementById(id);
+  const found = () => IDS.some(id => byId(id));
+  const onReady = fn => (document.readyState === 'complete' || document.readyState === 'interactive')
+    ? fn() : document.addEventListener('DOMContentLoaded', fn, {once:true});
 
-  // Warte bis DOM + Container existieren (und Settings-Seite initialisiert ist)
-  const START = performance.now();
-  const TIMEOUT_MS = 30000;
-  function byId(id){ return document.getElementById(id) }
-  function anyFound(){ return IDS.some(id => byId(id)) }
-
-  function waitTick(){
-    if (anyFound()) return init();
-    if ((performance.now() - START) > TIMEOUT_MS) { log('timeout waiting for containers'); return; }
-    requestAnimationFrame(waitTick);
+  function wait() {
+    if (found()) return init();
+    if (performance.now() - start > TIMEOUT) return;
+    requestAnimationFrame(wait);
   }
-
-  if (document.readyState === 'complete' || document.readyState === 'interactive') waitTick();
-  else document.addEventListener('DOMContentLoaded', waitTick, { once:true });
+  onReady(wait);
 
   function init(){
     const reqC  = byId('settingsReqModsContent');
     const optC  = byId('settingsOptModsContent');
     const dropC = byId('settingsDropinModsContent');
-    log('found containers', !!reqC, !!optC, !!dropC);
     if(!reqC && !optC && !dropC) return;
 
-    const LS_KEY = 'modsDropdownState';
-    const defaultState = { req: true, opt: true, dropin: true };
-    let state = defaultState;
-    try { const raw = localStorage.getItem(LS_KEY); if(raw) state = { ...defaultState, ...JSON.parse(raw) }; } catch(e){}
+    const STATE_KEY = 'modsDropdownState';
+    let state = { req:true, opt:true, dropin:true };
+    try { state = { ...state, ...JSON.parse(localStorage.getItem(STATE_KEY)||'{}') } } catch {}
 
-    function wrapInPlace(key, title, contentEl){
-      if(!contentEl) return null;
+    function makeSection(key, title, contentEl){
+      if(!contentEl || !contentEl.parentElement) return null;
       const parent = contentEl.parentElement;
-      if(!parent) return null;
 
-      // Abschnitt bauen
       const section = document.createElement('section');
-      section.className = 'settingsModsSection';
-      section.id = key+'ModsSection';
+      section.className = 'modsDDSection';
 
       const header = document.createElement('button');
       header.type = 'button';
-      header.className = 'settingsModsHeader';
-      header.setAttribute('aria-expanded','true');
-      header.setAttribute('data-section', key);
+      header.className = 'modsDDHeader';
+      header.setAttribute('aria-expanded', 'true');
+      header.dataset.section = key;
 
       const left = document.createElement('div');
-      left.className = 'settingsModsHeaderLeft';
+      left.className = 'modsDDHeaderLeft';
 
-      const chev = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      chev.setAttribute('viewBox','0 0 24 24');
-      chev.setAttribute('aria-hidden','true');
-      chev.classList.add('settingsModsChevron');
-      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('fill','currentColor');
-      path.setAttribute('d','M7 10l5 5 5-5z');
-      chev.appendChild(path);
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('viewBox','0 0 24 24'); svg.classList.add('modsDDChevron');
+      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('fill','currentColor'); p.setAttribute('d','M7 10l5 5 5-5z'); svg.appendChild(p);
 
       const titleEl = document.createElement('span');
-      titleEl.className = 'settingsModsTitle';
-      titleEl.textContent = title;
-
-      left.appendChild(chev);
-      left.appendChild(titleEl);
+      titleEl.className = 'modsDDTitle'; titleEl.textContent = title;
 
       const badge = document.createElement('span');
-      badge.className = 'settingsModsBadge';
-      badge.id = key+'ModsCount';
-      badge.textContent = '0';
+      badge.className = 'modsDDBadge'; badge.id = key+'ModsCount'; badge.textContent = '0';
 
-      header.appendChild(left);
-      header.appendChild(badge);
+      left.appendChild(svg); left.appendChild(titleEl);
+      header.appendChild(left); header.appendChild(badge);
 
       const list = document.createElement('div');
-      list.className = 'settingsModsList';
-      list.id = key+'ModsList';
-
+      list.className = 'modsDDListNoCSS'; // eigener Kanal, keine Kollisionen
       const inner = document.createElement('div');
-      inner.className = 'settingsModsListInner';
-
-      // Sektion vor bestehenden Inhalt einfügen, dann Original-Node hinein verschieben (Referenzen bleiben gültig)
-      parent.insertBefore(section, contentEl);
+      inner.className = 'modsDDListInnerNoCSS';
       inner.appendChild(contentEl);
+
       list.appendChild(inner);
       section.appendChild(header);
       section.appendChild(list);
+      parent.insertBefore(section, list.firstChild ? contentEl : null); // in-place
 
-      const expanded = !!state[key];
-      header.toggleAttribute('expanded', expanded);
-      if(expanded) list.setAttribute('expanded','true');
+      // Inline-Styles fürs Collapsing (kein CSS nötig)
+      Object.assign(list.style, { overflow:'hidden', maxHeight:'0px', transition:'max-height .25s ease' });
+
+      function setOpen(open){
+        header.toggleAttribute('expanded', open);
+        list.style.maxHeight = open ? (inner.scrollHeight + 12) + 'px' : '0px';
+      }
+
+      setTimeout(()=> setOpen(!!state[key]), 0);
 
       header.addEventListener('click', ()=>{
-        const isExpanded = list.hasAttribute('expanded') ? false : true;
-        header.setAttribute('aria-expanded', String(isExpanded));
-        header.toggleAttribute('expanded', isExpanded);
-        if(isExpanded) list.setAttribute('expanded','true');
-        else list.removeAttribute('expanded');
-        state[key] = isExpanded;
-        try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){}
-        updateCounts();
+        const open = !(list.style.maxHeight && list.style.maxHeight !== '0px');
+        setOpen(!open);
+        state[key] = !open;
+        try { localStorage.setItem(STATE_KEY, JSON.stringify(state)) } catch {}
+        recount();
       });
 
-      return { badge, holder: contentEl };
+      // Reflow bei Inhaltsänderungen
+      const mo = new MutationObserver(()=> { if(list.style.maxHeight !== '0px') setOpen(true); recount(); });
+      mo.observe(inner, { childList:true, subtree:true });
+
+      return { badge, holder: contentEl, refresh: ()=> setOpen(list.style.maxHeight !== '0px') };
     }
 
-    const sections = [];
-    if(reqC)  sections.push(wrapInPlace('req',  'Benötigte Mods', reqC));
-    if(optC)  sections.push(wrapInPlace('opt',  'Optionale Mods', optC));
-    if(dropC) sections.push(wrapInPlace('dropin','Drop-in Mods', dropC));
+    const S = [];
+    if(reqC)  S.push(makeSection('req','Benötigte Mods', reqC));
+    if(optC)  S.push(makeSection('opt','Optionale Mods', optC));
+    if(dropC) S.push(makeSection('dropin','Drop-in Mods', dropC));
 
-    function ensureEmpty(holder){
-      const hasAny = Array.from(holder.children).some(c => !c.classList || !c.classList.contains('settingsModsEmpty'));
-      if(!hasAny){
-        const empty = document.createElement('div');
-        empty.className = 'settingsModsEmpty';
-        empty.textContent = 'Keine Einträge.';
-        holder.appendChild(empty);
-      }
-    }
-
-    function updateCounts(){
-      sections.forEach(s=>{
+    function recount(){
+      S.forEach(s=>{
         if(!s) return;
-        const { badge, holder } = s;
-        const count = holder.querySelectorAll('.settingsBaseMod, .settingsMod, .settingsSubMod, .settingsDropinMod').length;
-        if(badge) badge.textContent = String(count);
-        if(count === 0) ensureEmpty(holder);
+        const n = s.holder.querySelectorAll('.settingsBaseMod, .settingsMod, .settingsSubMod, .settingsDropinMod').length;
+        s.badge.textContent = String(n||0);
+        if(n===0 && !s.holder.querySelector('.modsDDEmpty')){
+          const e = document.createElement('div'); e.className='modsDDEmpty'; e.textContent='Keine Einträge.';
+          s.holder.appendChild(e);
+        }
       });
     }
-
-    // Reagiere auf spätere DOM-Änderungen (wenn Mods dynamisch gerendert werden)
-    const mo = new MutationObserver(()=> updateCounts());
-    sections.forEach(s => s && mo.observe(s.holder, { childList:true, subtree:true }));
-
-    setTimeout(updateCounts, 0);
-    window.__applyModsCounters = updateCounts;
-    log('initialized');
+    setTimeout(recount, 0);
+    window.__applyModsCounters = recount;
   }
 })();
-
-
-// === Safe Mods Dropdown (only on Settings/Mods, crash-proof) ===
-(() => {
-  const log = (...a)=>{ try{ console.log('[ModsDropdownSafe]', ...a) }catch(e){} };
-  const TRY_MS = 30000, start = performance.now();
-  const IDS = ['settingsReqModsContent','settingsOptModsContent','settingsDropinModsContent'];
-
-  function byId(id){ return document.getElementById(id) }
-  function ready(fn){
-    if (document.readyState === 'complete' || document.readyState === 'interactive') fn();
-    else document.addEventListener('DOMContentLoaded', fn, { once:true });
-  }
-  function onModsView(){
-    const settingsView = document.getElementById('settingsView') || document.body;
-    return !!settingsView; // keep liberal; some builds don't hide via display none
-  }
-
-  function tick(){
-    try{
-      if (!onModsView()) return next();
-      const [reqC,optC,dropC] = IDS.map(byId);
-      if (reqC || optC || dropC) return init(reqC,optC,dropC);
-      next();
-    }catch(e){ log('abort:', e) }
-  }
-  function next(){
-    if ((performance.now() - start) > TRY_MS) return;
-    requestAnimationFrame(tick);
-  }
-
-  ready(tick);
-
-  function init(reqC,optC,dropC){
-    try{
-      const LS_KEY = 'modsDropdownState';
-      const state = (()=>{ try{ return {...{req:true,opt:true,dropin:true}, ...JSON.parse(localStorage.getItem(LS_KEY)||'{}')} }catch(_){ return {req:true,opt:true,dropin:true} } })();
-
-      function wrap(key,title,el){
-        if(!el || !el.parentElement) return null;
-        const parent = el.parentElement;
-
-        const section = document.createElement('section');
-        section.className = 'settingsModsSection';
-        section.id = key+'ModsSection';
-
-        const header = document.createElement('button');
-        header.type = 'button';
-        header.className = 'settingsModsHeader';
-        header.setAttribute('aria-expanded','true');
-        header.dataset.section = key;
-
-        const left = document.createElement('div');
-        left.className = 'settingsModsHeaderLeft';
-
-        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-        svg.setAttribute('viewBox','0 0 24 24');
-        svg.classList.add('settingsModsChevron');
-        const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-        p.setAttribute('fill','currentColor'); p.setAttribute('d','M7 10l5 5 5-5z'); svg.appendChild(p);
-
-        const titleEl = document.createElement('span');
-        titleEl.className = 'settingsModsTitle'; titleEl.textContent = title;
-
-        const badge = document.createElement('span');
-        badge.className = 'settingsModsBadge'; badge.id = key+'ModsCount'; badge.textContent = '0';
-
-        left.appendChild(svg); left.appendChild(titleEl);
-        header.appendChild(left); header.appendChild(badge);
-
-        const list = document.createElement('div');
-        list.className = 'settingsModsList'; list.id = key+'ModsList';
-        const inner = document.createElement('div'); inner.className = 'settingsModsListInner';
-
-        parent.insertBefore(section, el);
-        inner.appendChild(el); list.appendChild(inner);
-        section.appendChild(header); section.appendChild(list);
-
-        const expanded = !!state[key]; header.toggleAttribute('expanded', expanded);
-        if(expanded) list.setAttribute('expanded','true');
-
-        header.addEventListener('click', ()=>{
-          const open = !list.hasAttribute('expanded');
-          header.setAttribute('aria-expanded', String(open));
-          header.toggleAttribute('expanded', open);
-          if(open) list.setAttribute('expanded','true'); else list.removeAttribute('expanded');
-          state[key] = open; try{ localStorage.setItem(LS_KEY, JSON.stringify(state)) }catch(_){}
-          recount();
-        });
-
-        return { badge, holder: el };
-      }
-
-      const sections = [];
-      if(reqC)  sections.push(wrap('req','Benötigte Mods', reqC));
-      if(optC)  sections.push(wrap('opt','Optionale Mods', optC));
-      if(dropC) sections.push(wrap('dropin','Drop-in Mods', dropC));
-
-      function recount(){
-        sections.forEach(s=>{
-          if(!s) return;
-          const cnt = s.holder.querySelectorAll('.settingsBaseMod, .settingsMod, .settingsSubMod, .settingsDropinMod').length;
-          s.badge.textContent = String(cnt || 0);
-          if(cnt === 0 && !s.holder.querySelector('.settingsModsEmpty')){
-            const empty = document.createElement('div'); empty.className = 'settingsModsEmpty'; empty.textContent = 'Keine Einträge.';
-            s.holder.appendChild(empty);
-          }
-        });
-      }
-
-      const mo = new MutationObserver(()=>recount());
-      sections.forEach(s=> s && mo.observe(s.holder,{childList:true,subtree:true}));
-
-      setTimeout(recount,0);
-      window.__applyModsCounters = recount;
-      console.log('[ModsDropdownSafe] ready');
-    }catch(e){ console.error('[ModsDropdownSafe] init error', e) }
-  }
-})();
-

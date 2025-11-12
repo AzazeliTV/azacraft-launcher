@@ -4054,49 +4054,15 @@ button[disabled],
 }
 
 
-/* === Mods Dropdown UI v2 (no conflicts) === */
-.modsDDSection { margin-bottom: 20px; }
+/* Mods Dropdown v2 (keine Konflikte) */
+.modsDDSection{ margin-bottom:20px; }
+.modsDDHeader{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:10px 12px; background:rgba(0,0,0,.25); border:1px solid rgba(126,126,126,.57); border-radius:6px; transition:.25s; }
+.modsDDHeader:hover{ background:rgba(54,54,54,.25); text-shadow:0 0 12px #fff; }
+.modsDDHeaderLeft{ display:flex; align-items:center; gap:10px; }
+.modsDDChevron{ width:14px; height:14px; transform:rotate(-90deg); transition:transform .2s; }
+.modsDDHeader[expanded="true"] .modsDDChevron{ transform:rotate(0deg); }
+.modsDDBadge{ font-size:11px; border:1px solid rgba(126,126,126,.57); border-radius:999px; padding:2px 8px; opacity:.9; }
+.modsDDTitle{ font-size:16px; font-family:'Avenir Medium'; }
+.modsDDEmpty{ font-size:12px; color:grey; padding:10px 4px; }
 
-.modsDDHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  user-select: none;
-  cursor: pointer;
-  padding: 10px 12px;
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(126,126,126,0.57);
-  border-radius: 6px;
-  transition: 0.25s ease;
-}
-.modsDDHeader:hover,
-.modsDDHeader:focus { background: rgba(54,54,54,0.25); text-shadow: 0 0 12px #fff; }
-
-.modsDDHeaderLeft { display: flex; align-items: center; gap: 10px; }
-.modsDDTitle { font-size: 16px; font-family: 'Avenir Medium'; }
-.modsDDBadge {
-  font-size: 11px; border: 1px solid rgba(126,126,126,0.57);
-  border-radius: 999px; padding: 2px 8px; opacity: .9;
-}
-
-.modsDDChevron {
-  width: 14px; height: 14px; transform: rotate(-90deg);
-  transition: transform .2s ease; opacity: .9;
-}
-.modsDDHeader[expanded="true"] .modsDDChevron { transform: rotate(0deg); }
-
-.modsDDList {
-  overflow: hidden;
-  transition: grid-template-rows .25s ease, padding .25s ease;
-  display: grid;
-  grid-template-rows: 0fr;
-  padding: 0 6px;
-  border-left: 1px solid rgba(255,255,255,0.25);
-  margin-left: 10px;
-  border-radius: 0 0 6px 6px;
-}
-.modsDDList[expanded="true"] { grid-template-rows: 1fr; padding: 8px 6px 6px 6px; }
-.modsDDListInner { min-height: 0; overflow: hidden; }
-
-.modsDDEmpty { font-size: 12px; color: grey; padding: 10px 4px; }
 
