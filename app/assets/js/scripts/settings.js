@@ -1589,5 +1589,150 @@ async function prepareSettings(first = false) {
 // Prepare the settings UI on startup.
 //prepareSettings(true)
 
-try { require('./settings_mods_dom_wrap_keep.js') } catch (e) { /* ignore */ }
+// === Mods Dropdown (in-place, inline, no EJS) ===
+(() => {
+  const TAG = '[ModsDropdownInline]';
+  const log = (...a) => { try { console.log(TAG, ...a) } catch(e){} };
+
+  // IDs deiner vorhandenen Container:
+  const IDS = ['settingsReqModsContent','settingsOptModsContent','settingsDropinModsContent'];
+
+  // Warte bis DOM + Container existieren (und Settings-Seite initialisiert ist)
+  const START = performance.now();
+  const TIMEOUT_MS = 30000;
+  function byId(id){ return document.getElementById(id) }
+  function anyFound(){ return IDS.some(id => byId(id)) }
+
+  function waitTick(){
+    if (anyFound()) return init();
+    if ((performance.now() - START) > TIMEOUT_MS) { log('timeout waiting for containers'); return; }
+    requestAnimationFrame(waitTick);
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') waitTick();
+  else document.addEventListener('DOMContentLoaded', waitTick, { once:true });
+
+  function init(){
+    const reqC  = byId('settingsReqModsContent');
+    const optC  = byId('settingsOptModsContent');
+    const dropC = byId('settingsDropinModsContent');
+    log('found containers', !!reqC, !!optC, !!dropC);
+    if(!reqC && !optC && !dropC) return;
+
+    const LS_KEY = 'modsDropdownState';
+    const defaultState = { req: true, opt: true, dropin: true };
+    let state = defaultState;
+    try { const raw = localStorage.getItem(LS_KEY); if(raw) state = { ...defaultState, ...JSON.parse(raw) }; } catch(e){}
+
+    function wrapInPlace(key, title, contentEl){
+      if(!contentEl) return null;
+      const parent = contentEl.parentElement;
+      if(!parent) return null;
+
+      // Abschnitt bauen
+      const section = document.createElement('section');
+      section.className = 'settingsModsSection';
+      section.id = key+'ModsSection';
+
+      const header = document.createElement('button');
+      header.type = 'button';
+      header.className = 'settingsModsHeader';
+      header.setAttribute('aria-expanded','true');
+      header.setAttribute('data-section', key);
+
+      const left = document.createElement('div');
+      left.className = 'settingsModsHeaderLeft';
+
+      const chev = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      chev.setAttribute('viewBox','0 0 24 24');
+      chev.setAttribute('aria-hidden','true');
+      chev.classList.add('settingsModsChevron');
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('fill','currentColor');
+      path.setAttribute('d','M7 10l5 5 5-5z');
+      chev.appendChild(path);
+
+      const titleEl = document.createElement('span');
+      titleEl.className = 'settingsModsTitle';
+      titleEl.textContent = title;
+
+      left.appendChild(chev);
+      left.appendChild(titleEl);
+
+      const badge = document.createElement('span');
+      badge.className = 'settingsModsBadge';
+      badge.id = key+'ModsCount';
+      badge.textContent = '0';
+
+      header.appendChild(left);
+      header.appendChild(badge);
+
+      const list = document.createElement('div');
+      list.className = 'settingsModsList';
+      list.id = key+'ModsList';
+
+      const inner = document.createElement('div');
+      inner.className = 'settingsModsListInner';
+
+      // Sektion vor bestehenden Inhalt einfügen, dann Original-Node hinein verschieben (Referenzen bleiben gültig)
+      parent.insertBefore(section, contentEl);
+      inner.appendChild(contentEl);
+      list.appendChild(inner);
+      section.appendChild(header);
+      section.appendChild(list);
+
+      const expanded = !!state[key];
+      header.toggleAttribute('expanded', expanded);
+      if(expanded) list.setAttribute('expanded','true');
+
+      header.addEventListener('click', ()=>{
+        const isExpanded = list.hasAttribute('expanded') ? false : true;
+        header.setAttribute('aria-expanded', String(isExpanded));
+        header.toggleAttribute('expanded', isExpanded);
+        if(isExpanded) list.setAttribute('expanded','true');
+        else list.removeAttribute('expanded');
+        state[key] = isExpanded;
+        try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){}
+        updateCounts();
+      });
+
+      return { badge, holder: contentEl };
+    }
+
+    const sections = [];
+    if(reqC)  sections.push(wrapInPlace('req',  'Benötigte Mods', reqC));
+    if(optC)  sections.push(wrapInPlace('opt',  'Optionale Mods', optC));
+    if(dropC) sections.push(wrapInPlace('dropin','Drop-in Mods', dropC));
+
+    function ensureEmpty(holder){
+      const hasAny = Array.from(holder.children).some(c => !c.classList || !c.classList.contains('settingsModsEmpty'));
+      if(!hasAny){
+        const empty = document.createElement('div');
+        empty.className = 'settingsModsEmpty';
+        empty.textContent = 'Keine Einträge.';
+        holder.appendChild(empty);
+      }
+    }
+
+    function updateCounts(){
+      sections.forEach(s=>{
+        if(!s) return;
+        const { badge, holder } = s;
+        const count = holder.querySelectorAll('.settingsBaseMod, .settingsMod, .settingsSubMod, .settingsDropinMod').length;
+        if(badge) badge.textContent = String(count);
+        if(count === 0) ensureEmpty(holder);
+      });
+    }
+
+    // Reagiere auf spätere DOM-Änderungen (wenn Mods dynamisch gerendert werden)
+    const mo = new MutationObserver(()=> updateCounts());
+    sections.forEach(s => s && mo.observe(s.holder, { childList:true, subtree:true }));
+
+    setTimeout(updateCounts, 0);
+    window.__applyModsCounters = updateCounts;
+    log('initialized');
+  }
+})();
+
+
 

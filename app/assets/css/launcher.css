@@ -4128,3 +4128,7 @@ button[disabled],
     color: grey;
     padding: 10px 4px;
 }
+
+.settingsModsList { display:grid; grid-template-rows:0fr; overflow:hidden; }
+.settingsModsList[expanded="true"] { grid-template-rows:1fr; }
+.settingsModsListInner { min-height:0; overflow:hidden; } /* wichtig fürs 0fr→1fr */
