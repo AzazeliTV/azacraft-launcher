@@ -4056,29 +4056,3 @@ button[disabled],
 }
 
 
-/* Klickbarer Header + Pfeil */
-.settingsModsHeader{
-  cursor:pointer;position:relative;padding-right:18px;user-select:none;
-}
-.settingsModsHeader::after{
-  content:"▼";position:absolute;right:0;top:50%;transform:translateY(-50%);
-  font-size:.8em;opacity:.7;transition:transform .2s ease;
-}
-
-/* auf/zu per [collapsed] (Inhalt) */
-#settingsReqModsContainer[collapsed] #settingsReqModsContent,
-#settingsOptModsContainer[collapsed] #settingsOptModsContent,
-#settingsDropinModsContainer[collapsed] #settingsDropinModsContent,
-#settingsShadersContainer[collapsed] #settingsShadersContent{
-  display:none;
-}
-
-/* Pfeil drehen, wenn Sektion zu */
-#settingsReqModsContainer[collapsed] .settingsModsHeader::after,
-#settingsOptModsContainer[collapsed] .settingsModsHeader::after,
-#settingsDropinModsContainer[collapsed] .settingsModsHeader::after,
-#settingsShadersContainer[collapsed] .settingsModsHeader::after{
-  transform:translateY(-50%) rotate(-90deg);
-}
-
-
