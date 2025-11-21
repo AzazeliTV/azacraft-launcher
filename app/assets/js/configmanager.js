@@ -78,8 +78,8 @@ function resolveSelectedRAM(ram) {
 const DEFAULT_CONFIG = {
     settings: {
         game: {
-            resWidth: 1280,
-            resHeight: 720,
+            resWidth: 854,
+            resHeight: 480,
             fullscreen: false,
             autoConnect: true,
             launchDetached: true
@@ -517,8 +517,8 @@ function defaultJavaConfig(effectiveJavaOptions, ram) {
 
 function defaultJavaConfig8(ram) {
     return {
-        minRAM: "6G",
-        maxRAM: "10G",
+        minRAM: "1G",
+        maxRAM: "8G",
         executable: null,
         jvmOptions: [],
     }
@@ -526,8 +526,8 @@ function defaultJavaConfig8(ram) {
 
 function defaultJavaConfig17(ram) {
     return {
-        minRAM: "6G",
-        maxRAM: "10G",
+        minRAM: "1G",
+        maxRAM: "8G",
         executable: null,
         jvmOptions: [],
     }
