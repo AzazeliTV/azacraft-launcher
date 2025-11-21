@@ -517,7 +517,7 @@ function defaultJavaConfig(effectiveJavaOptions, ram) {
 
 function defaultJavaConfig8(ram) {
     return {
-        minRAM: "1G",
+        minRAM: "3G",
         maxRAM: "8G",
         executable: null,
         jvmOptions: [],
@@ -526,7 +526,7 @@ function defaultJavaConfig8(ram) {
 
 function defaultJavaConfig17(ram) {
     return {
-        minRAM: "1G",
+        minRAM: "3G",
         maxRAM: "8G",
         executable: null,
         jvmOptions: [],
