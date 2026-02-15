@@ -40,6 +40,9 @@ const launch_details_text     = document.getElementById('launch_details_text')
 const server_selection_button = document.getElementById('server_selection_button')
 const user_text               = document.getElementById('user_text')
 
+// Track game process state to prevent double-launch
+let gameRunning = false
+
 const loggerLanding = LoggerUtil.getLogger('Landing')
 
 /* Launch Progress Wrapper Functions */
@@ -100,6 +103,10 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
+    // Prevent double-click: immediately disable button
+    if(gameRunning || launch_button.disabled) return
+    launch_button.disabled = true
+    launch_button.textContent = 'STARTET...'
     loggerLanding.info('Launching game..')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
@@ -126,6 +133,12 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'))
     }
 })
+
+function resetLaunchButton(){
+    gameRunning = false
+    launch_button.disabled = false
+    launch_button.textContent = 'SPIELEN'
+}
 
 // Bind settings button
 document.getElementById('settingsMediaButton').onclick = async e => {
@@ -289,6 +302,8 @@ function showLaunchFailure(title, desc){
     setOverlayHandler(null)
     toggleOverlay(true)
     toggleLaunchArea(false)
+    // Re-enable play button on failure
+    resetLaunchButton()
 }
 
 /* System (Java) Scan */
@@ -562,6 +577,10 @@ async function dlAsync(login = true) {
 
         const onLoadComplete = () => {
             toggleLaunchArea(false)
+            // Show "running" state - keep button disabled
+            gameRunning = true
+            launch_button.disabled = true
+            launch_button.textContent = 'LÄUFT...'
             if(hasRPC){
                 DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.loading'))
                 proc.stdout.on('data', gameStateChange)
@@ -623,6 +642,12 @@ async function dlAsync(login = true) {
                     DiscordWrapper.shutdownRPC()
                     hasRPC = false
                     proc = null
+                    resetLaunchButton()
+                })
+            } else {
+                proc.on('close', (code, signal) => {
+                    proc = null
+                    resetLaunchButton()
                 })
             }
 
